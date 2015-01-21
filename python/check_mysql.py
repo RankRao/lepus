@@ -341,7 +341,7 @@ def main():
              #time.sleep(1)
              p = Process(target = check_mysql, args = (host,port,username,password,server_id,tags))
              plist.append(p)
-	 for p in plist:
+         for p in plist:
              p.start()
          time.sleep(10)
          for p in plist:
