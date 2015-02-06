@@ -21,7 +21,7 @@
 </div>
 
 <div class="well">
-<table class="table  table-bordered table-condensed" style="font-size: 12px;" >
+<table class="table  table-bordered table-condensed" style="font-size: 12px;table-layout:fixed;" >
     <tr>
         <th style="width: 120px;"><?php echo $this->lang->line('database'); ?></th>
         <td colspan="2"><?php echo $record['db_max']; ?></td>
@@ -42,11 +42,11 @@
 	</tr>
     <tr>
         <th><?php echo $this->lang->line('fingerprint'); ?></th>
-        <td colspan="6"><?php echo $record['fingerprint']; ?></td>	
+        <td colspan="6" style="word-wrap:break-word;" ><?php echo $record['fingerprint']; ?></td>	
 	</tr>
     <tr>
         <th><?php echo $this->lang->line('sample'); ?></th>
-        <td colspan="6"><?php echo $record['sample']; ?></td>
+        <td colspan="6" style="word-wrap:break-word;" ><?php echo $record['sample']; ?></td>
 	</tr>
     <tr>
         <th rowspan="2"><?php echo $this->lang->line('query_time'); ?></th>
