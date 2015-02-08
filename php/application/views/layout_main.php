@@ -67,11 +67,11 @@
 					?>
                     <li <?php if($model=='index'){ echo "class='active'";} ?> ><a href="<?php echo site_url('index/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button"><?php echo $this->lang->line('dashboard'); ?></a></li>
                     <li <?php if($model=='screen'){ echo "class='active'";} ?>><a href="<?php echo site_url('screen/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button"><?php echo $this->lang->line('screen'); ?></a></li>
-                    <li <?php if($model=='mysql'){ echo "class='active'";} ?>><a href="<?php echo site_url('mysql/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">MySQL</a></li>
-                    <li <?php if($model=='oracle'){ echo "class='active'";} ?>><a href="<?php echo site_url('oracle/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">Oracle</a></li>
-                    <li <?php if($model=='mongodb'){ echo "class='active'";} ?>><a href="<?php echo site_url('mongodb/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">MongoDB</a></li>
-                    <li <?php if($model=='redis'){ echo "class='active'";} ?>><a href="<?php echo site_url('redis/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">Redis</a></li>
-                    <li <?php if($model=='os'){ echo "class='active'";} ?>><a href="<?php echo site_url('os/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">OS</a></li>
+                    <li <?php if($model=='mysql'){ echo "class='active'";} ?>><a href="<?php echo site_url('lp_mysql/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">MySQL</a></li>
+                    <li <?php if($model=='oracle'){ echo "class='active'";} ?>><a href="<?php echo site_url('lp_oracle/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">Oracle</a></li>
+                    <li <?php if($model=='mongodb'){ echo "class='active'";} ?>><a href="<?php echo site_url('lp_mongodb/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">MongoDB</a></li>
+                    <li <?php if($model=='redis'){ echo "class='active'";} ?>><a href="<?php echo site_url('lp_redis/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">Redis</a></li>
+                    <li <?php if($model=='os'){ echo "class='active'";} ?>><a href="<?php echo site_url('lp_os/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">OS</a></li>
                     <li <?php if($model=='alarm'){ echo "class='active'";} ?>><a href="<?php echo site_url('alarm/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button"><?php echo $this->lang->line('alarm'); ?></a></li>
                     <li <?php if($model=='settings'){ echo "class='active'";} ?>><a href="<?php echo site_url('settings/index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button"><?php echo $this->lang->line('settings'); ?></a></li>
                     
