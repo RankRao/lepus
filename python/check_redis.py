@@ -35,7 +35,7 @@ def check_value(info,key):
 
 def check_redis(host,port,passwd,server_id,tags):
     try:
-        r=redis.StrictRedis(host=host,port=port,password=passwd,db=0,socket_timeout=3,charset='utf-8') 
+        r=redis.StrictRedis(host=host,port=int(port),password=passwd,db=0,socket_timeout=3,charset='utf-8') 
         info=r.info()
         time.sleep(1)
         info_2=r.info()
