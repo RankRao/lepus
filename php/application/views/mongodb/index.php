@@ -61,7 +61,7 @@
     <table class="table table-hover table-condensed ">
       <thead>
         <tr style="font-size: 12px;">
-		<th colspan="2"><center><?php echo $this->lang->line('servers'); ?></center></th>
+		<th colspan="3"><center><?php echo $this->lang->line('servers'); ?></center></th>
         <th colspan="3"><center><?php echo $this->lang->line('basic_info'); ?></center></th>
 		<th colspan="2"><center><?php echo $this->lang->line('connections'); ?></center></th>
         <th colspan="2"><center><?php echo $this->lang->line('globallock'); ?></center></th>
@@ -72,6 +72,7 @@
         <tr style="font-size: 12px;">
         <th><?php echo $this->lang->line('host'); ?></th> 
         <th><?php echo $this->lang->line('tags'); ?></th> 
+        <th><?php echo $this->lang->line('role'); ?></th>
 		<th><?php echo $this->lang->line('connect'); ?></th>
         <th><?php echo $this->lang->line('uptime'); ?></th>
 		<th><?php echo $this->lang->line('version'); ?></th>
@@ -94,6 +95,7 @@
     <tr style="font-size: 12px;">
         <td><?php echo $item['host'] ?>:<?php echo $item['port'] ?></td>
 		<td><?php echo $item['tags'] ?></td>
+		<td><?php echo $item['repl_role'] ?></td>
 		<td><?php if($item['connect']=='1'){ ?> <span class="label label-success"><?php echo $this->lang->line('success'); ?></span> <?php }else{  ?><span class="label label-important"><?php echo $this->lang->line('failure'); ?></span> <?php } ?></td>
         <td><?php echo check_uptime($item['uptime']) ?></td>
         <td><?php echo check_value($item['version']) ?></td>
