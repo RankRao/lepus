@@ -101,6 +101,8 @@ $(document).ready(function(){
   <button type="submit" class="btn btn-success"><i class="icon-search"></i> <?php echo $this->lang->line('search'); ?></button>
   <a href="<?php echo site_url('mysql/slowquery') ?>" class="btn btn-warning"><i class="icon-repeat"></i> <?php echo $this->lang->line('reset'); ?></a>
 
+  <!--添加一个空的表单变量让URL中order_type=desc?noparam=0变成order_type=desc&noparam=0?，使order by生效  -->
+  <input type="hidden" name="noparam" value="0" />
 </form>                 
 </div>
 
