@@ -24,13 +24,13 @@ def job_run(script_name,times):
 
 def main():
     logger.info("lepus controller start.")
-    monitor = func.get_option('monitor')
-    monitor_mysql = func.get_option('monitor_mysql')
-    monitor_mongodb = func.get_option('monitor_mongodb')
-    monitor_oracle = func.get_option('monitor_oracle')
-    monitor_redis = func.get_option('monitor_redis')
-    monitor_os = func.get_option('monitor_os')
-    alarm = func.get_option('alarm')
+    monitor = str(func.get_option('monitor'))
+    monitor_mysql = str(func.get_option('monitor_mysql'))
+    monitor_mongodb = str(func.get_option('monitor_mongodb'))
+    monitor_oracle = str(func.get_option('monitor_oracle'))
+    monitor_redis = str(func.get_option('monitor_redis'))
+    monitor_os = str(func.get_option('monitor_os'))
+    alarm = str(func.get_option('alarm'))
     frequency_monitor = func.get_option('frequency_monitor')
     frequency_monitor_alarm = int(frequency_monitor)+10
 
