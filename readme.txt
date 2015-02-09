@@ -21,4 +21,5 @@ LepusÓµÓĞ´´ĞÂµÄMySQLÂı²éÑ¯·ÖÎö£¬TopSQL×Ô¶¯ÍÆËÍ£¬»ùÓÚÊ±¼ä·¶Î§µÄMySQL AWRĞÔÄÜ±¨¸æ¹
 ¹Ù·½ÍøÕ¾:www.lepus.cc
 ÎÄµµÖĞĞÄ:www.lepus.cc/manual/index
 ½»Á÷ÉçÇø:www.lepus.cc/topic/index
-ÁªÏµÎÒÃÇ:ruyi1024@vip.126.com
+¾èÔùÎÒÃÇ:www.lepus.cc/page/donate
+ÁªÏµÎÒÃÇ:ruyi1024@vip.126.com (·şÎñ/ºÏ×÷/¶¨ÖÆ/ÔŞÖú)
