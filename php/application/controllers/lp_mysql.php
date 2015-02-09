@@ -515,7 +515,7 @@ on `status`.server_id=`server`.id order by threads_running desc limit 10;")->res
     }
     
     public function awrreport_create(){
-        parent::check_privilege('mysql/awrreport');
+        parent::check_privilege('lp_mysql/awrreport');
         $server_id=isset($_POST["server_id"]) ? $_POST["server_id"] : "";
     
         $host = $this->server->get_host_by_id($server_id);
