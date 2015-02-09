@@ -429,7 +429,7 @@ CREATE TABLE `mongodb_status` (
   `uptime` int(11) NOT NULL DEFAULT '-1',
   `version` varchar(50) NOT NULL DEFAULT '-1',
   `connections_current` smallint(4) NOT NULL DEFAULT '-1',
-  `connections_available` smallint(4) NOT NULL DEFAULT '-1',
+  `connections_available` smallint(4) UNSIGNED NOT NULL DEFAULT '0',
   `globalLock_currentQueue` smallint(4) NOT NULL DEFAULT '-1',
   `globalLock_activeClients` smallint(4) NOT NULL DEFAULT '-1',
   `indexCounters_accesses` bigint(18) NOT NULL DEFAULT '-1',
@@ -467,7 +467,7 @@ CREATE TABLE `mongodb_status` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_server_id` (`server_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=243080 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mongodb_status_history
