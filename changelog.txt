@@ -1,12 +1,28 @@
 ====================================
-3.6.0版本更新记录
+3.7版本更新记录
+【bug fix】修复权限认证模块删除最外层节点时报错的bug
+【bug fix】修复mongodb检测时角色判断不正确的bug
+【bug fix】修复mysql检测时Linux进程变成僵尸进程的bug
+【bug fix】修复慢查询详细信息TD超出表格显示的bug
+【bug fix】修复mysql慢查询分析点击搜索排序后，分页后搜索失效的bug
+【bug fix】修复lepus的mongo管理界面会报错的bug（错误：Fatal error: Cannot redeclare class Mongodb...）
+【bug fix】修复mysql检测时Linux进程变成僵尸进程的bug
+【bug fix】修正redis检测时端口不是整形造成报错的bug
+【bug fix】修正告警WEB界面搜索url不正确的bug
+【bug fix】修正部分存储字段太小造成的检测异常问题
+【bug fix】修复监控主进程lepus.py判断监控配置开关时从mysql读取变量类型不一致导致配置关闭诸如oracle监控后，主进程还是进行相关检测的问题。
+【功能优化】自定义类MySQL/Oracle/MongoDB/Redis/OS增加前缀lp,避免和php内置db类名称冲突
+【功能优化】添加MongoDB在首页仪表盘显示角色
+
+====================================
+3.6版本更新记录
 1.监控机启动WEB界面显示状态错误的bug
 2.修复最大发送告警次数不生效的问题
 3.新增飞信机器人短信通知
 4.修改其他小的bug
 
 ====================================
-3.5.0版本更新记录
+3.5版本更新记录
 1.新增Oracle/Redis的性能监控
 2.修复慢查询分析重复显示的Bug
 3.修复OS监控主机修改后重复的bug
