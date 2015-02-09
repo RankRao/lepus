@@ -14,7 +14,7 @@
 
 <script language="javascript" src="./lib/DatePicker/WdatePicker.js"></script>
                 
-<form name="form" onsubmit="return check_submit()" class="form-horizontal" target="_blank" method="post" action="<?php echo site_url('mysql/awrreport_create') ?>" >
+<form name="form" onsubmit="return check_submit()" class="form-horizontal" target="_blank" method="post" action="<?php echo site_url('lp_mysql/awrreport_create') ?>" >
 
 <div class="well">
    

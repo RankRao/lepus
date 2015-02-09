@@ -51,13 +51,13 @@ a {color:#950000;	text-decoration:none;}
 MySQL Online AWR Report
 </h1>
 <hr />
-<a href="<?php echo site_url('mysql/awrreport_create'); ?>#t_server">Server |</a> 
-<a href="<?php echo site_url('mysql/awrreport_create'); ?>#t_resource">Resource |</a> 
-<a href="<?php echo site_url('mysql/awrreport_create'); ?>#t_threads">Threads |</a>
-<a href="<?php echo site_url('mysql/awrreport_create'); ?>#t_aborted">Aborted |</a>
-<a href="<?php echo site_url('mysql/awrreport_create'); ?>#t_queries">Queries |</a> 
-<a href="<?php echo site_url('mysql/awrreport_create'); ?>#t_cpu">Cpu |</a>
-<a href="<?php echo site_url('mysql/awrreport_create'); ?>#t_slowsql">SlowSQL |</a>   
+<a href="<?php echo site_url('lp_mysql/awrreport_create'); ?>#t_server">Server |</a> 
+<a href="<?php echo site_url('lp_mysql/awrreport_create'); ?>#t_resource">Resource |</a> 
+<a href="<?php echo site_url('lp_mysql/awrreport_create'); ?>#t_threads">Threads |</a>
+<a href="<?php echo site_url('lp_mysql/awrreport_create'); ?>#t_aborted">Aborted |</a>
+<a href="<?php echo site_url('lp_mysql/awrreport_create'); ?>#t_queries">Queries |</a> 
+<a href="<?php echo site_url('lp_mysql/awrreport_create'); ?>#t_cpu">Cpu |</a>
+<a href="<?php echo site_url('lp_mysql/awrreport_create'); ?>#t_slowsql">SlowSQL |</a>   
 <hr />
 <p id="t_server"><h3>Server</h3> </p>
 <p>

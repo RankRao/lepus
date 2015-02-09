@@ -122,7 +122,7 @@
         <td><?php echo check_db_status_level($item['memory'],$item['memory_tips']) ?></td>
         <td><?php echo check_db_status_level($item['network'],$item['network_tips']) ?></td>
         <td><?php echo check_db_status_level($item['disk'],$item['disk_tips']) ?></td>
-        <td><a href="<?php echo site_url($item['db_type'].'/chart/'.$item['server_id']); ?>"><img src="./images/chart.gif"/></a></td>
+        <td><a href="<?php echo site_url('lp_'.$item['db_type'].'/chart/'.$item['server_id']); ?>"><img src="./images/chart.gif"/></a></td>
   </tr>
  <?php endforeach;?>
  <?php }else{  ?>
