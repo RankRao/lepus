@@ -72,7 +72,7 @@ def check_mongodb(host,port,user,passwd,server_id,tags):
             repl=serverStatus['repl']
             setName=repl['setName']
             replset=1
-            if repl['secondary']==true:
+            if repl['secondary']== True:
                 repl_role='secondary'
                 repl_role_new='s'
             else:

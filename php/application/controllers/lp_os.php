@@ -1,6 +1,6 @@
 <?php if ( ! defined("BASEPATH")) exit("No direct script access allowed");
 
-class Os extends Front_Controller {
+class Lp_os extends Front_Controller {
 
     function __construct(){
 		parent::__construct();

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50536
 File Encoding         : 65001
 
-Date: 2015-01-06 17:08:19
+Date: 2015-02-09 15:48:42
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,7 +26,7 @@ CREATE TABLE `admin_log` (
   `client_ip` varchar(100) DEFAULT NULL,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=926 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1560 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for admin_menu
@@ -129,7 +129,7 @@ CREATE TABLE `alarm` (
   `send_sms` tinyint(2) DEFAULT NULL,
   `send_sms_to_list` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3303751 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3349377 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for alarm_history
@@ -158,7 +158,7 @@ CREATE TABLE `alarm_history` (
   KEY `idx_host` (`host`),
   KEY `idx_alarm_type` (`alarm_item`),
   KEY `idx_level` (`level`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=45633 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for alarm_temp
@@ -173,7 +173,7 @@ CREATE TABLE `alarm_temp` (
   `alarm_type` varchar(30) DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2857545 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2902859 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for db_servers_mongodb
@@ -401,7 +401,7 @@ CREATE TABLE `db_status` (
   `disk_tips` varchar(500) NOT NULL DEFAULT 'no_data',
   `uptime_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=286 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for lepus_status
@@ -428,8 +428,8 @@ CREATE TABLE `mongodb_status` (
   `ok` tinyint(2) NOT NULL DEFAULT '-1',
   `uptime` int(11) NOT NULL DEFAULT '-1',
   `version` varchar(50) NOT NULL DEFAULT '-1',
-  `connections_current` smallint(4) NOT NULL DEFAULT '-1',
-  `connections_available` smallint(4) UNSIGNED NOT NULL DEFAULT '0',
+  `connections_current` int(10) NOT NULL DEFAULT '-1',
+  `connections_available` int(10) NOT NULL DEFAULT '-1',
   `globalLock_currentQueue` smallint(4) NOT NULL DEFAULT '-1',
   `globalLock_activeClients` smallint(4) NOT NULL DEFAULT '-1',
   `indexCounters_accesses` bigint(18) NOT NULL DEFAULT '-1',
@@ -467,7 +467,7 @@ CREATE TABLE `mongodb_status` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_server_id` (`server_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=267286 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mongodb_status_history
@@ -485,8 +485,8 @@ CREATE TABLE `mongodb_status_history` (
   `ok` tinyint(2) NOT NULL DEFAULT '-1',
   `uptime` int(11) NOT NULL DEFAULT '-1',
   `version` varchar(50) NOT NULL DEFAULT '-1',
-  `connections_current` smallint(4) NOT NULL DEFAULT '-1',
-  `connections_available` smallint(4) NOT NULL DEFAULT '-1',
+  `connections_current` int(10) NOT NULL DEFAULT '-1',
+  `connections_available` int(10) NOT NULL DEFAULT '-1',
   `globalLock_currentQueue` smallint(4) NOT NULL DEFAULT '-1',
   `globalLock_activeClients` smallint(4) NOT NULL DEFAULT '-1',
   `indexCounters_accesses` bigint(18) NOT NULL DEFAULT '-1',
@@ -526,7 +526,7 @@ CREATE TABLE `mongodb_status_history` (
   PRIMARY KEY (`id`),
   KEY `idx_serverid_ymdhi` (`server_id`,`YmdHi`) USING BTREE,
   KEY `idx_ymdhi` (`YmdHi`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=243079 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=267285 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mysql_bigtable
@@ -546,7 +546,7 @@ CREATE TABLE `mysql_bigtable` (
   PRIMARY KEY (`id`),
   KEY `idx_server_id` (`server_id`) USING BTREE,
   KEY `idx_table_size` (`table_size`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1083 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1855 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mysql_bigtable_history
@@ -567,7 +567,7 @@ CREATE TABLE `mysql_bigtable_history` (
   PRIMARY KEY (`id`),
   KEY `idx_create_time` (`create_time`) USING BTREE,
   KEY `idx_server_id_tablename_ymd` (`server_id`,`table_name`,`Ymd`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1059 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1829 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mysql_connected
@@ -585,7 +585,7 @@ CREATE TABLE `mysql_connected` (
   `connect_count` int(10) NOT NULL DEFAULT '0',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43185787 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=43215471 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mysql_processlist
@@ -610,7 +610,7 @@ CREATE TABLE `mysql_processlist` (
   KEY `idx_create_time` (`create_time`) USING BTREE,
   KEY `idx_server_id` (`server_id`) USING BTREE,
   KEY `idx_application_id` (`tags`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=826490 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=892428 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mysql_replication
@@ -638,7 +638,7 @@ CREATE TABLE `mysql_replication` (
   `master_binlog_space` bigint(18) NOT NULL DEFAULT '0',
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1277917 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1390197 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mysql_replication_history
@@ -671,7 +671,7 @@ CREATE TABLE `mysql_replication_history` (
   KEY `idx_create_time` (`create_time`),
   KEY `idx_union_1` (`server_id`,`YmdHi`) USING BTREE,
   KEY `idx_ymdhi` (`YmdHi`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1277912 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1390192 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mysql_slow_query_review
@@ -913,7 +913,7 @@ CREATE TABLE `mysql_status` (
   KEY `idx_connections` (`threads_connected`) USING BTREE,
   KEY `idx_active` (`threads_running`) USING BTREE,
   KEY `idx_server_id` (`server_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1446072 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1659296 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mysql_status_history
@@ -1021,7 +1021,7 @@ CREATE TABLE `mysql_status_history` (
   KEY `idx_application_id` (`tags`) USING BTREE,
   KEY `idx_create_time` (`create_time`) USING BTREE,
   KEY `idx_yhdmi` (`YmdHi`)
-) ENGINE=InnoDB AUTO_INCREMENT=1446063 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1659296 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for options
@@ -1081,7 +1081,7 @@ CREATE TABLE `oracle_status` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_server_id` (`server_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=416031 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=440226 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for oracle_status_history
@@ -1132,7 +1132,7 @@ CREATE TABLE `oracle_status_history` (
   PRIMARY KEY (`id`),
   KEY `idx_server_id` (`server_id`) USING BTREE,
   KEY `idx_ymdhi` (`ymdhi`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=416030 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=440225 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for oracle_tablespace
@@ -1152,7 +1152,7 @@ CREATE TABLE `oracle_tablespace` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_server_id` (`server_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2865254 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2986229 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for oracle_tablespace_history
@@ -1173,7 +1173,7 @@ CREATE TABLE `oracle_tablespace_history` (
   `ymdhi` bigint(18) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_server_id` (`server_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2865249 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2986224 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for os_disk
@@ -1191,7 +1191,7 @@ CREATE TABLE `os_disk` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_ip` (`ip`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1239618 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1382420 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for os_disk_history
@@ -1210,7 +1210,7 @@ CREATE TABLE `os_disk_history` (
   `YmdHi` bigint(18) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_ip` (`ip`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1239612 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1382414 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for os_diskio
@@ -1225,7 +1225,7 @@ CREATE TABLE `os_diskio` (
   `disk_io_writes` bigint(18) NOT NULL DEFAULT '0',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3098523 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3502353 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for os_diskio_history
@@ -1245,7 +1245,7 @@ CREATE TABLE `os_diskio_history` (
   KEY `idx_ip_ymdhi` (`ip`,`YmdHi`),
   KEY `idx_io_reads` (`disk_io_reads`),
   KEY `idx_io_writes` (`disk_io_writes`)
-) ENGINE=InnoDB AUTO_INCREMENT=3098514 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3502336 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for os_net
@@ -1261,7 +1261,7 @@ CREATE TABLE `os_net` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_ip` (`ip`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2056881 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2318790 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for os_net_history
@@ -1278,7 +1278,7 @@ CREATE TABLE `os_net_history` (
   `YmdHi` bigint(18) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_ip` (`ip`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2056878 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2318779 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for os_status
@@ -1318,7 +1318,7 @@ CREATE TABLE `os_status` (
   PRIMARY KEY (`id`),
   KEY `idx_ip_create_time` (`ip`,`create_time`) USING BTREE,
   KEY `idx_create_time` (`create_time`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4140 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=75613 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for os_status_history
@@ -1360,7 +1360,7 @@ CREATE TABLE `os_status_history` (
   KEY `idx_host_ymdhi` (`ip`,`YmdHi`),
   KEY `idx_ymdhi` (`YmdHi`) USING BTREE,
   KEY `idx_createtime` (`create_time`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4139 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=75610 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for redis_replication
@@ -1384,7 +1384,7 @@ CREATE TABLE `redis_replication` (
   `connected_slaves` smallint(4) DEFAULT '0',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=336830 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=454260 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for redis_replication_history
@@ -1409,7 +1409,7 @@ CREATE TABLE `redis_replication_history` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `ymdhi` bigint(18) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=336824 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=454256 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for redis_status
@@ -1463,8 +1463,8 @@ CREATE TABLE `redis_status` (
   `aof_last_rewrite_time_sec` smallint(4) NOT NULL DEFAULT '-1',
   `aof_current_rewrite_time_sec` smallint(4) NOT NULL DEFAULT '-1',
   `aof_last_bgrewrite_status` varchar(10) NOT NULL DEFAULT '-1',
-  `total_connections_received` int(10) NOT NULL DEFAULT '-1',
-  `total_commands_processed` int(10) NOT NULL DEFAULT '-1',
+  `total_connections_received` bigint(18) NOT NULL DEFAULT '-1',
+  `total_commands_processed` bigint(18) NOT NULL DEFAULT '-1',
   `current_commands_processed` smallint(4) NOT NULL DEFAULT '-1',
   `instantaneous_ops_per_sec` smallint(4) NOT NULL DEFAULT '-1',
   `rejected_connections` smallint(4) NOT NULL DEFAULT '-1',
@@ -1482,7 +1482,7 @@ CREATE TABLE `redis_status` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_server_id` (`server_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=383716 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=528742 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for redis_status_history
@@ -1536,8 +1536,8 @@ CREATE TABLE `redis_status_history` (
   `aof_last_rewrite_time_sec` smallint(4) NOT NULL DEFAULT '-1',
   `aof_current_rewrite_time_sec` smallint(4) NOT NULL DEFAULT '-1',
   `aof_last_bgrewrite_status` varchar(10) NOT NULL DEFAULT '-1',
-  `total_connections_received` int(10) NOT NULL DEFAULT '-1',
-  `total_commands_processed` int(10) NOT NULL DEFAULT '-1',
+  `total_connections_received` bigint(18) NOT NULL DEFAULT '-1',
+  `total_commands_processed` bigint(18) NOT NULL DEFAULT '-1',
   `current_commands_processed` smallint(4) NOT NULL DEFAULT '-1',
   `instantaneous_ops_per_sec` smallint(4) NOT NULL DEFAULT '-1',
   `rejected_connections` smallint(4) NOT NULL DEFAULT '-1',
@@ -1556,4 +1556,4 @@ CREATE TABLE `redis_status_history` (
   `ymdhi` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_server_id` (`server_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=383710 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=528736 DEFAULT CHARSET=utf8;

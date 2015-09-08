@@ -42,7 +42,7 @@
     <td><?php echo $item['load_5']; ?></td>
     <td><?php echo $item['load_15']; ?></td>
     <td><?php echo $item['process']; ?></td>
-    <td><a href="<?php echo site_url('os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
+    <td><a href="<?php echo site_url('lp_os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
     </tr>
  <?php }}else{  ?>
 <tr>
@@ -73,7 +73,7 @@
     <td><?php echo $item['fdisk']; ?></td>
     <td><?php echo $item['disk_io_writes']; ?></td>
     <td><?php echo $item['disk_io_reads']; ?></td>
-    <td><a href="<?php echo site_url('os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
+    <td><a href="<?php echo site_url('lp_os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
     </tr>
  <?php }}else{  ?>
 <tr>
@@ -112,7 +112,7 @@
     <td><?php echo format_kbytes($item['used_size']); ?></td>
     <td><?php echo format_kbytes($item['avail_size']); ?></td>
     <td><?php echo ($item['used_rate']); ?></td>
-    <td><a href="<?php echo site_url('os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
+    <td><a href="<?php echo site_url('lp_os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
     </tr>
  <?php }}else{  ?>
 <tr>
@@ -142,7 +142,7 @@
     <td><?php echo $item['fdisk']; ?></td>
     <td><?php echo $item['disk_io_writes']; ?></td>
     <td><?php echo $item['disk_io_reads']; ?></td>
-    <td><a href="<?php echo site_url('os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
+    <td><a href="<?php echo site_url('lp_os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
     </tr>
  <?php }}else{  ?>
 <tr>
@@ -181,7 +181,7 @@
     <td><?php echo format_kbytes($item['used_size']); ?></td>
     <td><?php echo format_kbytes($item['avail_size']); ?></td>
     <td><?php echo ($item['used_rate']); ?></td>
-    <td><a href="<?php echo site_url('os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
+    <td><a href="<?php echo site_url('lp_os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
     </tr>
  <?php }}else{  ?>
 <tr>
@@ -211,7 +211,7 @@
     <td><?php echo $item['fdisk']; ?></td>
     <td><?php echo $item['disk_io_writes']; ?></td>
     <td><?php echo $item['disk_io_reads']; ?></td>
-    <td><a href="<?php echo site_url('os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
+    <td><a href="<?php echo site_url('lp_os/cpu_chart/'.$item['ip']) ?>"><img src="./images/chart.gif"/></a></a></td>
     </tr>
  <?php }}else{  ?>
 <tr>

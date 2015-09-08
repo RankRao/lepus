@@ -19,7 +19,7 @@
                     
 <div class="ui-state-default ui-corner-all" style="height: 45px;" >
 <p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-search"></span>                 
-<form name="form" class="form-inline" method="get" action="<?php echo site_url('mysql/health') ?>" >
+<form name="form" class="form-inline" method="get" action="<?php echo site_url('lp_mysql/health') ?>" >
  <select name="application_id" class="input-small" style="width: 120px;">
   <option value=""><?php echo $this->lang->line('application'); ?></option>
   <?php foreach ($application  as $item):?>
@@ -71,7 +71,7 @@
   </select>
 
   <button type="submit" class="btn btn-success"><i class="icon-search"></i> <?php echo $this->lang->line('search'); ?></button>
-  <a href="<?php echo site_url('mysql/health') ?>" class="btn btn-warning"><i class="icon-repeat"></i> <?php echo $this->lang->line('reset'); ?></a>
+  <a href="<?php echo site_url('lp_mysql/health') ?>" class="btn btn-warning"><i class="icon-repeat"></i> <?php echo $this->lang->line('reset'); ?></a>
   <button id="refresh" class="btn btn-info"><i class="icon-refresh"></i> <?php echo $this->lang->line('refresh'); ?></button>
 </form>                
 </div>
@@ -118,7 +118,7 @@
         <td><?php echo check_value($item['bytes_sent_persecond']) ?>KB</td>
         <td><?php echo check_value($item['queries_persecond']) ?></td>
         <td><?php echo check_value($item['transaction_persecond']) ?></td>
-        <td><a href="<?php echo site_url('mysql/health_chart/'.$item['server_id']) ?>"><img src="./images/chart.gif"/></a></td>
+        <td><a href="<?php echo site_url('lp_mysql/health_chart/'.$item['server_id']) ?>"><img src="./images/chart.gif"/></a></td>
 	</tr>
  <?php endforeach;?>
  <?php }else{  ?>

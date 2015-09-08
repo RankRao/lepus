@@ -207,6 +207,11 @@ class Auth_model extends CI_Model{
 		foreach($sub_menus as $sub_menu)
 		{
 			$parent_menu = $this->get_parent_menus_by_submenu_id($sub_menu->menu_id);
+            //父节点有可能被删除
+            if(!$parent_menu)
+            {
+                continue; 
+            }
 			if(!isset($all_menu[$parent_menu->menu_id]))
 			{
 				$all_menu[$parent_menu->menu_id] = array('parent_title' => $parent_menu->menu_title,

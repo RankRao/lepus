@@ -13,15 +13,15 @@
 <div class="row-fluid">
  
 <div class="btn-toolbar">
-    <!--<a class="btn btn-primary " href="<?php echo site_url('mysql/slowquery_detail/'.$record['checksum'].'/'.$setval['server_id'].'/prev') ?>"><i class="icon-arrow-left"></i> <?php echo $this->lang->line('prev'); ?></a>
-    <a class="btn btn-primary " href="<?php echo site_url('mysql/slowquery_detail/'.$record['checksum'].'/'.$setval['server_id'].'/next') ?>"><i class="icon-arrow-right"></i> <?php echo $this->lang->line('next'); ?></a>-->
-    <a class="btn btn " href="<?php echo site_url('mysql/slowquery') ?>"><i class="icon-list"></i> <?php echo $this->lang->line('return'); ?><?php echo $this->lang->line('list'); ?></a>
+    <!--<a class="btn btn-primary " href="<?php echo site_url('lp_mysql/slowquery_detail/'.$record['checksum'].'/'.$setval['server_id'].'/prev') ?>"><i class="icon-arrow-left"></i> <?php echo $this->lang->line('prev'); ?></a>
+    <a class="btn btn-primary " href="<?php echo site_url('lp_mysql/slowquery_detail/'.$record['checksum'].'/'.$setval['server_id'].'/next') ?>"><i class="icon-arrow-right"></i> <?php echo $this->lang->line('next'); ?></a>-->
+    <a class="btn btn " href="<?php echo site_url('lp_mysql/slowquery') ?>"><i class="icon-list"></i> <?php echo $this->lang->line('return'); ?><?php echo $this->lang->line('list'); ?></a>
     <button id="close" class="btn btn-danger"><i class="icon-off"></i> <?php echo $this->lang->line('close'); ?></button>
   <div class="btn-group"></div>
 </div>
 
 <div class="well">
-<table class="table  table-bordered table-condensed" style="font-size: 12px;" >
+<table class="table  table-bordered table-condensed" style="font-size: 12px;table-layout:fixed;" >
     <tr>
         <th style="width: 120px;"><?php echo $this->lang->line('database'); ?></th>
         <td colspan="2"><?php echo $record['db_max']; ?></td>
@@ -42,11 +42,11 @@
 	</tr>
     <tr>
         <th><?php echo $this->lang->line('fingerprint'); ?></th>
-        <td colspan="6"><?php echo $record['fingerprint']; ?></td>	
+        <td colspan="6" style="word-wrap:break-word;" ><?php echo $record['fingerprint']; ?></td>	
 	</tr>
     <tr>
         <th><?php echo $this->lang->line('sample'); ?></th>
-        <td colspan="6"><?php echo $record['sample']; ?></td>
+        <td colspan="6" style="word-wrap:break-word;" ><?php echo $record['sample']; ?></td>
 	</tr>
     <tr>
         <th rowspan="2"><?php echo $this->lang->line('query_time'); ?></th>
