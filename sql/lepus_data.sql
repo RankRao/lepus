@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 219.234.6.180-lepus_db
+Source Server         : westserver_new
 Source Server Version : 50536
-Source Host           : 219.234.6.180:3306
-Source Database       : lepus_db
+Source Host           : www.lepus.cc:3306
+Source Database       : lepus
 
 Target Server Type    : MYSQL
 Target Server Version : 50536
 File Encoding         : 65001
 
-Date: 2015-02-09 16:33:37
+Date: 2016-05-01 09:55:52
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,7 +31,7 @@ CREATE TABLE `admin_menu` (
   `display_order` smallint(4) NOT NULL DEFAULT '0',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of admin_menu
@@ -60,7 +60,7 @@ INSERT INTO `admin_menu` VALUES ('31', 'Resource Monitor', '2', '3', 'lp_mysql/r
 INSERT INTO `admin_menu` VALUES ('32', 'MongoDB', '2', '16', 'servers_mongodb/index', 'icon-list', '0', '1', '5', '2014-04-14 12:26:35');
 INSERT INTO `admin_menu` VALUES ('33', 'MongoDB Monitor', '1', '0', 'lp_mongodb', 'icon-dashboard', '0', '1', '5', '2014-04-14 14:15:52');
 INSERT INTO `admin_menu` VALUES ('34', 'Health Montior', '2', '33', 'lp_mongodb/index', 'icon-list', '0', '1', '1', '2014-04-14 14:17:23');
-INSERT INTO `admin_menu` VALUES ('35', 'Indexes Monitor', '2', '33', 'lp_mongodb/indexes', 'icon-list', '0', '1', '2', '2014-04-14 16:25:48');
+INSERT INTO `admin_menu` VALUES ('35', 'Indexes Monitor', '2', '33', 'lp_mongodb/indexes', 'icon-list', '0', '0', '2', '2014-04-14 16:25:48');
 INSERT INTO `admin_menu` VALUES ('36', 'Memory Monitor', '2', '33', 'lp_mongodb/memory', 'icon-list', '0', '1', '3', '2014-04-14 16:26:50');
 INSERT INTO `admin_menu` VALUES ('40', 'Oracle', '2', '16', 'servers_oracle/index', 'icon-list', '0', '1', '4', '2014-05-27 13:21:49');
 INSERT INTO `admin_menu` VALUES ('43', 'Health Monitor', '2', '22', 'lp_os/index', 'icon-list', '0', '1', '0', '2014-07-08 09:19:11');
@@ -69,12 +69,15 @@ INSERT INTO `admin_menu` VALUES ('45', 'OS', '2', '16', 'servers_os/index', 'ico
 INSERT INTO `admin_menu` VALUES ('46', 'Settings', '2', '16', 'settings/index', 'icon-list', '0', '1', '0', '2014-08-12 15:30:54');
 INSERT INTO `admin_menu` VALUES ('48', 'Redis Monitor', '1', '0', 'lp_redis', 'icon-dashboard', '0', '1', '6', '2014-09-02 12:36:41');
 INSERT INTO `admin_menu` VALUES ('50', 'Health Monitor', '2', '48', 'lp_redis/index', 'icon-list', '0', '1', '2', '2014-09-02 12:39:58');
-INSERT INTO `admin_menu` VALUES ('51', 'Redis', '2', '16', 'servers_redis/index', 'icon-list', '0', '1', '6', '2014-09-09 17:15:41');
+INSERT INTO `admin_menu` VALUES ('51', 'Redis', '2', '16', 'servers_redis/index', 'icon-list', '0', '1', '7', '2014-09-09 17:15:41');
 INSERT INTO `admin_menu` VALUES ('52', 'Memory Monitor', '2', '48', 'lp_redis/memory', 'icon-list', '0', '1', '3', '2014-09-11 14:34:13');
 INSERT INTO `admin_menu` VALUES ('54', 'Replication Monitor', '2', '48', 'lp_redis/replication', 'icon-list', '0', '0', '5', '2014-09-11 14:37:12');
 INSERT INTO `admin_menu` VALUES ('56', 'Oracle Monitor', '1', '0', 'lp_oracle', 'icon-dashboard', '0', '1', '4', '2014-10-24 15:34:50');
 INSERT INTO `admin_menu` VALUES ('57', 'Health Montior', '2', '56', 'lp_oracle/index', 'icon-list', '0', '1', '1', '2014-10-24 15:35:47');
 INSERT INTO `admin_menu` VALUES ('58', 'Tablespace Monitor', '2', '56', 'lp_oracle/tablespace', 'icon-list', '0', '1', '2', '2014-10-24 15:37:19');
+INSERT INTO `admin_menu` VALUES ('59', 'SQLServer', '2', '16', 'servers_sqlserver/index', 'icon-list', '0', '1', '6', '2015-12-31 11:06:53');
+INSERT INTO `admin_menu` VALUES ('60', 'SQLServer Monitor', '1', '0', 'lp_sqlserver', 'icon-dashboard', '0', '1', '5', '2016-01-26 17:22:09');
+INSERT INTO `admin_menu` VALUES ('61', 'Health Monitor', '2', '60', 'lp_sqlserver/index', 'icon-list', '0', '1', '1', '2016-01-26 17:24:20');
 
 -- ----------------------------
 -- Table structure for admin_privilege
@@ -87,7 +90,7 @@ CREATE TABLE `admin_privilege` (
   `action` varchar(100) DEFAULT NULL,
   `display_order` smallint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`privilege_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of admin_privilege
@@ -176,6 +179,14 @@ INSERT INTO `admin_privilege` VALUES ('113', 'Settings Save', '46', 'settings/sa
 INSERT INTO `admin_privilege` VALUES ('114', 'Oracle Servers Trash', '40', 'servers_oracle/trash', '48');
 INSERT INTO `admin_privilege` VALUES ('115', 'Oracle Servers Delete', '40', 'servers_oracle/delete', '48');
 INSERT INTO `admin_privilege` VALUES ('116', 'Oracle Servers Batch Add', '40', 'servers_oracle/batch_add', '48');
+INSERT INTO `admin_privilege` VALUES ('117', 'SQLServer Servers View', '59', 'servers_sqlserver/index', '51');
+INSERT INTO `admin_privilege` VALUES ('118', 'SQLServer Servers Add', '59', 'servers_sqlserver/add', '51');
+INSERT INTO `admin_privilege` VALUES ('119', 'SQLServer Servers Edit', '59', 'servers_sqlserver/edit', '51');
+INSERT INTO `admin_privilege` VALUES ('120', 'SQLServer Servers Trash', '59', 'servers_sqlserver/trash', '51');
+INSERT INTO `admin_privilege` VALUES ('121', 'SQLServer Servers Delete', '59', 'servers_sqlserver/delete', '51');
+INSERT INTO `admin_privilege` VALUES ('122', 'SQLServer Servers Batch Add', '59', 'servers_sqlserver/batch_add', '51');
+INSERT INTO `admin_privilege` VALUES ('123', 'SQLServer Health Monitor', '61', 'lp_sqlserver/index', '28');
+INSERT INTO `admin_privilege` VALUES ('124', 'SQLServer Health Chart', '61', 'lp_sqlserver/chart', '29');
 
 -- ----------------------------
 -- Table structure for admin_role
@@ -292,6 +303,14 @@ INSERT INTO `admin_role_privilege` VALUES ('1', '113');
 INSERT INTO `admin_role_privilege` VALUES ('1', '114');
 INSERT INTO `admin_role_privilege` VALUES ('1', '115');
 INSERT INTO `admin_role_privilege` VALUES ('1', '116');
+INSERT INTO `admin_role_privilege` VALUES ('1', '117');
+INSERT INTO `admin_role_privilege` VALUES ('1', '118');
+INSERT INTO `admin_role_privilege` VALUES ('1', '119');
+INSERT INTO `admin_role_privilege` VALUES ('1', '120');
+INSERT INTO `admin_role_privilege` VALUES ('1', '121');
+INSERT INTO `admin_role_privilege` VALUES ('1', '122');
+INSERT INTO `admin_role_privilege` VALUES ('1', '123');
+INSERT INTO `admin_role_privilege` VALUES ('1', '124');
 INSERT INTO `admin_role_privilege` VALUES ('2', '4');
 INSERT INTO `admin_role_privilege` VALUES ('3', '1');
 INSERT INTO `admin_role_privilege` VALUES ('3', '2');
@@ -438,6 +457,9 @@ INSERT INTO `admin_role_privilege` VALUES ('7', '105');
 INSERT INTO `admin_role_privilege` VALUES ('7', '110');
 INSERT INTO `admin_role_privilege` VALUES ('7', '111');
 INSERT INTO `admin_role_privilege` VALUES ('7', '112');
+INSERT INTO `admin_role_privilege` VALUES ('7', '117');
+INSERT INTO `admin_role_privilege` VALUES ('7', '123');
+INSERT INTO `admin_role_privilege` VALUES ('7', '124');
 
 -- ----------------------------
 -- Table structure for admin_user
@@ -461,8 +483,8 @@ CREATE TABLE `admin_user` (
 -- ----------------------------
 -- Records of admin_user
 -- ----------------------------
-INSERT INTO `admin_user` VALUES ('1', 'admin', '6f493fbddf9107797f5044bb229ac6ee', 'Administrator', 'admin@mail.com', '', '0', '', '2015-02-09 13:55:31', '1', '2013-12-25 15:58:34');
-INSERT INTO `admin_user` VALUES ('8', 'guest', 'e10adc3949ba59abbe56e057f20f883e', 'Guest', '', '', '624', '114.86.1.166', '2015-02-09 13:39:57', '1', '2014-03-12 17:06:36');
+INSERT INTO `admin_user` VALUES ('1', 'admin', '6f493fbddf9107797f5044bb229ac6ee', 'Administrator', 'admin@mail.com', '', '48', '42.196.163.128', '2016-05-01 09:53:36', '1', '2013-12-25 15:58:34');
+INSERT INTO `admin_user` VALUES ('8', 'guest', 'e10adc3949ba59abbe56e057f20f883e', 'Guest', '', '', '5664', '42.196.163.128', '2016-05-01 09:28:46', '1', '2014-03-12 17:06:36');
 
 -- ----------------------------
 -- Table structure for admin_user_role
@@ -498,8 +520,8 @@ CREATE TABLE `lepus_status` (
 -- Records of lepus_status
 -- ----------------------------
 INSERT INTO `lepus_status` VALUES ('lepus_running', '1');
-INSERT INTO `lepus_status` VALUES ('lepus_version', '3.7');
-INSERT INTO `lepus_status` VALUES ('lepus_checktime', 'none');
+INSERT INTO `lepus_status` VALUES ('lepus_version', '3.8 Beta');
+INSERT INTO `lepus_status` VALUES ('lepus_checktime', '2016-05-01 09:56:10');
 
 -- ----------------------------
 -- Table structure for options
@@ -519,10 +541,10 @@ INSERT INTO `options` VALUES ('monitor', '1', '是否开启全局监控,此项�
 INSERT INTO `options` VALUES ('monitor_mysql', '1', '是否开启MySQL状态监控');
 INSERT INTO `options` VALUES ('send_alarm_mail', '1', '是否发送报警邮件');
 INSERT INTO `options` VALUES ('send_mail_to_list', '', '报警邮件通知人员');
-INSERT INTO `options` VALUES ('monitor_os', '1', '是否开启OS监控');
-INSERT INTO `options` VALUES ('monitor_mongodb', '1', '是否监控MongoDB');
+INSERT INTO `options` VALUES ('monitor_os', '0', '是否开启OS监控');
+INSERT INTO `options` VALUES ('monitor_mongodb', '0', '是否监控MongoDB');
 INSERT INTO `options` VALUES ('alarm', '1', '是否开启告警');
-INSERT INTO `options` VALUES ('send_mail_max_count', '1', '发送邮件最大次数');
+INSERT INTO `options` VALUES ('send_mail_max_count', '3', '发送邮件最大次数');
 INSERT INTO `options` VALUES ('report_mail_to_list', '', '报告邮件推送接收人员');
 INSERT INTO `options` VALUES ('frequency_monitor', '60', '监控频率');
 INSERT INTO `options` VALUES ('send_mail_sleep_time', '720', '发送邮件休眠时间(分钟)');
@@ -534,12 +556,13 @@ INSERT INTO `options` VALUES ('smtp_user', 'noreplymail', '邮件发送配置:�
 INSERT INTO `options` VALUES ('smtp_pass', '', '邮件发送配置:密码');
 INSERT INTO `options` VALUES ('smtp_timeout', '10', '邮件发送配置:超时时间');
 INSERT INTO `options` VALUES ('mailfrom', 'noreplymail@126.com', '邮件发送配置:发件人');
-INSERT INTO `options` VALUES ('monitor_redis', '1', '是否监控Redis');
-INSERT INTO `options` VALUES ('monitor_oracle', '1', '是否监控Oracle');
-INSERT INTO `options` VALUES ('send_alarm_sms', '1', '是否发生短信');
+INSERT INTO `options` VALUES ('monitor_redis', '0', '是否监控Redis');
+INSERT INTO `options` VALUES ('monitor_oracle', '0', '是否监控Oracle');
+INSERT INTO `options` VALUES ('send_alarm_sms', '0', '是否发生短信');
 INSERT INTO `options` VALUES ('send_sms_to_list', '', '短信收件人列表');
-INSERT INTO `options` VALUES ('send_sms_max_count', '1', '发送短信最大次数');
+INSERT INTO `options` VALUES ('send_sms_max_count', '3', '发送短信最大次数');
 INSERT INTO `options` VALUES ('send_sms_sleep_time', '180', '发送短信休眠时间(分钟)');
 INSERT INTO `options` VALUES ('sms_fetion_user', '', '飞信发送短信账号');
 INSERT INTO `options` VALUES ('sms_fetion_pass', '', '飞信发送短信密码');
 INSERT INTO `options` VALUES ('smstype', 'fetion', '发送短信方式：fetion/api');
+INSERT INTO `options` VALUES ('monitor_sqlserver', '0', '是否开启SQLServer监控');
