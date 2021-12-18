@@ -494,7 +494,7 @@ on `status`.server_id=`server`.id order by threads_running desc limit 10;")->res
         parent::check_privilege();
         $checksum=$this->uri->segment(3);
         $record = $this->mysql->get_slowquery_record_by_checksum($checksum);
-		if(!$checksum || !$record){
+		if($checksum === null || !$record){
 			show_404();
 		}
         else{
