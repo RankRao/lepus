@@ -1,3 +1,6 @@
-/web/application/config/database.php
 /etc/config.ini
+/etc/proxy.ini
+/etc/alarm.ini
+/bin/*
+/vendor/*
 .idea
