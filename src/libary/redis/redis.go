@@ -28,7 +28,7 @@ var redisClient *redis.Client
 func InitClient() *redis.Client {
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:         fmt.Sprintf("%s:%s", conf.Option["redis_host"], conf.Option["redis_port"]),
-		Password:     "", // no password set
+		Password:     conf.Option["redis_pass"], // no password set
 		DB:           0,  // use default DB
 		PoolSize:     1000,
 		ReadTimeout:  time.Millisecond * time.Duration(200),
