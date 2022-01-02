@@ -129,7 +129,14 @@ func runTaskCmd(runId, taskId, taskName, taskCommand, timeout string) {
 	var (
 		status, logContent string
 	)
-
+	//sysType := runtime.GOOS
+	//var execType string
+	//if sysType == "linux" {
+	//	execType = "/bin/sh"
+	//}
+	//if sysType == "windows" {
+	//	execType = "cmd"
+	//}
 	cmd := exec.Command("/bin/sh", "-c", taskCommand)
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -166,7 +173,7 @@ func runTaskCmd(runId, taskId, taskName, taskCommand, timeout string) {
 		case err := <-errorChan:
 			status = "failed"
 			logContent = fmt.Sprint(err)
-			log.Error(fmt.Sprintf("Task %s execute command finished with err:%s", taskName, err))
+			log.Error(fmt.Sprintf("Task %s execute command finished with err:%s, %s", taskName, err, out.String()))
 		}
 	}
 	mysql.Execute(db, fmt.Sprintf("update task_run set run_status='%s',run_end_time='%s' where id='%s' ", status, utils.GetCurrentTime(), runId))
