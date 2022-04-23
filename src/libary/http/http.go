@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2021 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -21,14 +21,26 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"time"
 )
 
-// 发送GET请求
+// Get 发送GET请求
 // url：         请求地址
 // response：    请求返回的内容
-func Get(url string) (string, error) {
+func Get(url string) (*http.Response, error) {
+	// 超时时间：5秒
+	client := &http.Client{Timeout: 5 * time.Second}
+	response, err := client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	return response, nil
+}
+
+func GetBody(url string) (string, error) {
 
 	// 超时时间：5秒
 	client := &http.Client{Timeout: 5 * time.Second}
@@ -52,19 +64,33 @@ func Get(url string) (string, error) {
 	return result.String(), nil
 }
 
-// 发送POST请求
+// Post 发送POST请求
 // url：         请求地址
 // data：        POST请求提交的数据
 // contentType： 请求体格式，如：application/json
 // content：     请求放回的内容
 func Post(url string, data interface{}) (string, error) {
 
-	// 超时时间：5秒
-	client := &http.Client{Timeout: 5 * time.Second}
+	// 超时时间：3秒
+	//client := &http.Client{Timeout: 3 * time.Second}
+	client := &http.Client{
+		Transport: &http.Transport{
+			Dial: func(netw, addr string) (net.Conn, error) {
+				conn, err := net.DialTimeout(netw, addr, time.Second*5)
+				if err != nil {
+					return nil, err
+				}
+				conn.SetDeadline(time.Now().Add(time.Second * 5))
+				return conn, nil
+			},
+			MaxResponseHeaderBytes: 1000000000,
+			ResponseHeaderTimeout:  time.Second * 5,
+		},
+	}
 	jsonStr, _ := json.Marshal(data)
 	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonStr))
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	defer resp.Body.Close()
 

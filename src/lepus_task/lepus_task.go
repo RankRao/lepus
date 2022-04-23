@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2021 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -19,7 +19,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/gorhill/cronexpr"
 	"lepus/src/libary/conf"
 	"lepus/src/libary/conv"
 	"lepus/src/libary/logger"
@@ -28,6 +27,8 @@ import (
 	"os/exec"
 	"runtime"
 	"time"
+
+	"github.com/gorhill/cronexpr"
 )
 
 var opt = conf.Option
@@ -129,15 +130,20 @@ func runTaskCmd(runId, taskId, taskName, taskCommand, timeout string) {
 	var (
 		status, logContent string
 	)
-	//sysType := runtime.GOOS
-	//var execType string
-	//if sysType == "linux" {
-	//	execType = "/bin/sh"
-	//}
-	//if sysType == "windows" {
-	//	execType = "cmd"
-	//}
-	cmd := exec.Command("/bin/sh", "-c", taskCommand)
+
+	/*
+		sysType := runtime.GOOS
+		var cmd *exec.Cmd
+		if sysType == "linux" {
+			cmd = exec.Command("/bin/sh", "-c", taskCommand)
+		}
+		if sysType == "windows" {
+			cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+			cmd = exec.Command("/bin/sh", "-c", taskCommand)
+		}
+	*/
+
+	cmd := exec.Command(taskCommand, "--config=../etc/config.ini")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	if err := cmd.Start(); err != nil {
@@ -173,7 +179,7 @@ func runTaskCmd(runId, taskId, taskName, taskCommand, timeout string) {
 		case err := <-errorChan:
 			status = "failed"
 			logContent = fmt.Sprint(err)
-			log.Error(fmt.Sprintf("Task %s execute command finished with err:%s, %s", taskName, err, out.String()))
+			log.Error(fmt.Sprintf("Task %s execute command finished with err:%s", taskName, err))
 		}
 	}
 	mysql.Execute(db, fmt.Sprintf("update task_run set run_status='%s',run_end_time='%s' where id='%s' ", status, utils.GetCurrentTime(), runId))

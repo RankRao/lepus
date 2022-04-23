@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2021 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -18,7 +18,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/garyburd/redigo/redis"
 	"lepus/src/libary/conf"
 	"lepus/src/libary/conv"
 	"lepus/src/libary/http"
@@ -26,20 +25,24 @@ import (
 	"lepus/src/libary/mysql"
 	_ "lepus/src/libary/redis"
 	"lepus/src/libary/tool"
+	"lepus/src/libary/utils"
 	_ "reflect"
 	"strings"
 	"time"
+
+	"github.com/garyburd/redigo/redis"
 )
 
 var log = logger.NewLog(conf.Option["log_dir"]+"/lepus_redis_mon.log", conv.StrToInt(conf.Option["debug"]))
 var dbClient = mysql.InitConnect()
 
-func collectorRedis(dbType string, dbGroup string, ip string, port string, tag string) {
+func collectorRedis(dbType string, dbGroup string, ip string, port string, origPass string, tag string) {
 	log.Info(fmt.Sprintf("Start check instance %s:%s at %s", ip, port, time.Now()))
 	eventEntity := fmt.Sprintf("%s:%s", ip, port)
 	rdb, err := redis.Dial("tcp", ip+":"+port)
 	if err != nil {
 		log.Error(fmt.Sprintln("Can't dial redis, ", err))
+
 		eventEntity := fmt.Sprintf("%s:%s", ip, port)
 		events := make([]map[string]interface{}, 0)
 		event := map[string]interface{}{
@@ -57,7 +60,7 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, tag s
 		if err != nil {
 			log.Error(fmt.Sprintln("Send events to proxy error:", err))
 		}
-		insertSQL := fmt.Sprintf("insert into dashboard_redis(ip,port,tag,connect) values('%s','%s','%s','%d')", ip, port, tag, 0)
+		insertSQL := fmt.Sprintf("insert into dashboard_redis(host,port,tag,connect) values('%s','%s','%s','%d')", ip, port, tag, 0)
 		err = mysql.Execute(dbClient, insertSQL)
 		if err != nil {
 			log.Error(fmt.Sprintln("Can't insert data to mysql database, ", err))
@@ -66,6 +69,15 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, tag s
 		return
 	}
 	defer rdb.Close()
+
+	if origPass != "" {
+		if _, err := rdb.Do("AUTH", origPass); err != nil {
+			rdb.Close()
+			log.Error(fmt.Sprintln("Redis Auth error, ", err))
+			return
+		}
+	}
+
 	info, err := redis.String(rdb.Do("INFO"))
 	if err != nil {
 		log.Error(fmt.Sprintln("Can't do redis info query, ", err))
@@ -83,7 +95,6 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, tag s
 	}
 
 	connect := 1
-	role := infoMap["role"]
 	redisVersion := infoMap["redis_version"]
 	redisMode := infoMap["redis_mode"]
 	os := infoMap["os"]
@@ -128,16 +139,66 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, tag s
 	usedCpuSysChildren := infoMap["used_cpu_sys_children"]
 	usedCpuUserChildren := infoMap["used_cpu_user_children"]
 
+	maxClientsConfig, err := redis.Strings(rdb.Do("config", "GET", "maxclients"))
+	if err != nil {
+		log.Error(fmt.Sprintln("Can't do redis maxclients query, ", err))
+		return
+	}
+	maxClients := maxClientsConfig[1]
+
+	maxMemoryConfig, err := redis.Strings(rdb.Do("config", "GET", "maxmemory"))
+	if err != nil {
+		log.Error(fmt.Sprintln("Can't do redis maxMemory query, ", err))
+		return
+	}
+
+	maxMemory := maxMemoryConfig[1]
+
 	events := make([]map[string]interface{}, 0)
-	//emptyDetail := make([]map[string]interface{},0)
 
 	event := map[string]interface{}{
 		"event_time":   tool.GetNowTime(),
 		"event_type":   dbType,
 		"event_group":  dbGroup,
 		"event_entity": eventEntity,
+		"event_key":    "connect",
+		"event_value":  1,
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "uptimeInSeconds",
+		"event_value":  utils.StrToFloat(strings.Replace(uptimeInSeconds, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "uptimeInDays",
+		"event_value":  utils.StrToFloat(strings.Replace(uptimeInDays, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
 		"event_key":    "connectedClients",
-		"event_value":  connectedClients,
+		"event_value":  utils.StrToFloat(strings.Replace(connectedClients, "\r", "", -1)),
 		"event_tag":    tag,
 		"event_unit":   "",
 	}
@@ -149,7 +210,7 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, tag s
 		"event_group":  dbGroup,
 		"event_entity": eventEntity,
 		"event_key":    "blockedClients",
-		"event_value":  blockedClients,
+		"event_value":  utils.StrToFloat(strings.Replace(blockedClients, "\r", "", -1)),
 		"event_tag":    tag,
 		"event_unit":   "",
 	}
@@ -161,7 +222,163 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, tag s
 		"event_group":  dbGroup,
 		"event_entity": eventEntity,
 		"event_key":    "usedMemory",
-		"event_value":  usedMemory,
+		"event_value":  utils.StrToFloat(strings.Replace(usedMemory, "\r", "", -1)) / 1024 / 1024,
+		"event_tag":    tag,
+		"event_unit":   "MB",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "usedMemoryRss",
+		"event_value":  utils.StrToFloat(strings.Replace(usedMemoryRss, "\r", "", -1)) / 1024 / 1024,
+		"event_tag":    tag,
+		"event_unit":   "MB",
+	}
+
+	events = append(events, event)
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "usedMemoryPeak",
+		"event_value":  utils.StrToFloat(strings.Replace(usedMemoryPeak, "\r", "", -1)) / 1024 / 1024,
+		"event_tag":    tag,
+		"event_unit":   "MB",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "usedMemoryLua",
+		"event_value":  utils.StrToFloat(strings.Replace(usedMemoryLua, "\r", "", -1)) / 1024 / 1024,
+		"event_tag":    tag,
+		"event_unit":   "MB",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "memFragmentationRatio",
+		"event_value":  utils.StrToFloat(strings.Replace(memFragmentationRatio, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "%",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "totalConnectionsReceived",
+		"event_value":  utils.StrToFloat(strings.Replace(totalConnectionsReceived, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "totalCommandsProcessed",
+		"event_value":  utils.StrToFloat(strings.Replace(totalCommandsProcessed, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "instantaneousOpsPerSec",
+		"event_value":  utils.StrToFloat(strings.Replace(instantaneousOpsPerSec, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "rejectedConnections",
+		"event_value":  utils.StrToFloat(strings.Replace(rejectedConnections, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "expiredKeys",
+		"event_value":  utils.StrToFloat(strings.Replace(expiredKeys, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "evictedKeys",
+		"event_value":  utils.StrToFloat(strings.Replace(evictedKeys, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "keyspaceHits",
+		"event_value":  utils.StrToFloat(strings.Replace(keyspaceHits, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "usedCpuSys",
+		"event_value":  utils.StrToFloat(strings.Replace(usedCpuSys, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "usedCpuUser",
+		"event_value":  utils.StrToFloat(strings.Replace(usedCpuUser, "\r", "", -1)),
 		"event_tag":    tag,
 		"event_unit":   "",
 	}
@@ -173,9 +390,9 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, tag s
 	}
 
 	insertSQL := fmt.Sprintf("insert into dashboard_redis("+
-		"ip,port,tag,connect,role,redis_version,redis_mode,os,arch_bits, gcc_version, process_id, run_id, tcp_port, uptime_in_seconds, uptime_in_days, connected_clients, blocked_clients, used_memory, used_memory_human, used_memory_rss, used_memory_rss_human, used_memory_peak, used_memory_peak_human,used_memory_lua, used_memory_lua_human, mem_fragmentation_ratio, mem_allocator, rdb_bgsave_in_progress, rdb_last_save_time, rdb_last_bgsave_status, rdb_last_bgsave_time_sec, aof_enabled, aof_rewrite_in_progress,aof_rewrite_scheduled, aof_last_rewrite_time_sec, aof_last_bgrewrite_status, total_connections_received, total_commands_processed, instantaneous_ops_per_sec, rejected_connections, expired_keys, evicted_keys,keyspace_hits, keyspace_misses, used_cpu_sys, used_cpu_user, used_cpu_sys_children, used_cpu_user_children) "+
-		"values('%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
-		ip, port, tag, connect, role, redisVersion, redisMode, os, archBits, gccVersion, processId, runId, tcpPort, uptimeInSeconds, uptimeInDays, connectedClients, blockedClients, usedMemory, usedMemoryHuman, usedMemoryRss, usedMemoryRssHuman, usedMemoryPeak, usedMemoryPeakHuman, usedMemoryLua, usedMemoryLuaHuman, memFragmentationRatio, memAllocator, rdbBgsaveInProgress, rdbLastSaveTime, rdbLastBgsaveStatus, rdbLastBgsaveTimeSec, aofEnabled, aofRewriteInProgress, aofRewriteScheduled, aofLastRewriteTimeSec, aofLastBgrewriteStatus, totalConnectionsReceived, totalCommandsProcessed, instantaneousOpsPerSec, rejectedConnections, expiredKeys, evictedKeys, keyspaceHits, keyspaceMisses, usedCpuSys, usedCpuUser, usedCpuSysChildren, usedCpuUserChildren)
+		"host,port,tag,connect,redis_version,redis_mode,os,arch_bits, gcc_version, process_id, run_id, tcp_port, uptime_in_seconds, uptime_in_days, connected_clients, blocked_clients, maxclients,maxmemory,used_memory, used_memory_human, used_memory_rss, used_memory_rss_human, used_memory_peak, used_memory_peak_human,used_memory_lua, used_memory_lua_human, mem_fragmentation_ratio, mem_allocator, rdb_bgsave_in_progress, rdb_last_save_time, rdb_last_bgsave_status, rdb_last_bgsave_time_sec, aof_enabled, aof_rewrite_in_progress,aof_rewrite_scheduled, aof_last_rewrite_time_sec, aof_last_bgrewrite_status, total_connections_received, total_commands_processed, instantaneous_ops_per_sec, rejected_connections, expired_keys, evicted_keys,keyspace_hits, keyspace_misses, used_cpu_sys, used_cpu_user, used_cpu_sys_children, used_cpu_user_children) "+
+		"values('%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+		ip, port, tag, connect, redisVersion, redisMode, os, archBits, gccVersion, processId, runId, tcpPort, uptimeInSeconds, uptimeInDays, connectedClients, blockedClients, maxClients, maxMemory, usedMemory, usedMemoryHuman, usedMemoryRss, usedMemoryRssHuman, usedMemoryPeak, usedMemoryPeakHuman, usedMemoryLua, usedMemoryLuaHuman, memFragmentationRatio, memAllocator, rdbBgsaveInProgress, rdbLastSaveTime, rdbLastBgsaveStatus, rdbLastBgsaveTimeSec, aofEnabled, aofRewriteInProgress, aofRewriteScheduled, aofLastRewriteTimeSec, aofLastBgrewriteStatus, totalConnectionsReceived, totalCommandsProcessed, instantaneousOpsPerSec, rejectedConnections, expiredKeys, evictedKeys, keyspaceHits, keyspaceMisses, usedCpuSys, usedCpuUser, usedCpuSysChildren, usedCpuUserChildren)
 
 	err = mysql.Execute(dbClient, insertSQL)
 	if err != nil {
@@ -194,7 +411,15 @@ func scanRedis() {
 		return
 	}
 	for _, row := range rows {
-		go collectorRedis(row["module_name"].(string), row["env_name"].(string), row["ip"].(string), row["port"].(string), row["cluster_name"].(string))
+		var origPass string
+		if row["pass"] != "" && row["pass"] != nil {
+			origPass, err = utils.AesPassDecode(row["pass"].(string), conf.Option["db_pass_key"])
+			if err != nil {
+				log.Error("Encrypt Password Error.")
+				return
+			}
+		}
+		go collectorRedis(row["module_name"].(string), row["env_name"].(string), row["ip"].(string), row["port"].(string), origPass, row["cluster_name"].(string))
 	}
 }
 func main() {
@@ -207,6 +432,6 @@ func main() {
 	//	time.Sleep(time.Duration(conv.StrToInt(conf.Option["interval"])) * time.Second)
 	//}
 	scanRedis()
-	time.Sleep(time.Duration(5) * time.Second)
+	time.Sleep(time.Duration(8) * time.Second)
 	defer dbClient.Close()
 }

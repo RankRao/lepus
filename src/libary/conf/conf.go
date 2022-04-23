@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2021 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -18,8 +18,9 @@ package conf
 
 import (
 	"flag"
-	"github.com/larspensjo/config"
 	"os"
+
+	"github.com/larspensjo/config"
 )
 
 var (
@@ -129,6 +130,18 @@ func init() {
 		if err == nil {
 			for _, v := range section {
 				options, err := cfg.String("nsq", v)
+				if err == nil {
+					Option[v] = options
+				}
+			}
+		}
+	}
+
+	if cfg.HasSection("influxdb") {
+		section, err := cfg.SectionOptions("influxdb")
+		if err == nil {
+			for _, v := range section {
+				options, err := cfg.String("influxdb", v)
 				if err == nil {
 					Option[v] = options
 				}

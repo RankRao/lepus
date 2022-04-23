@@ -14,30 +14,18 @@ Please do not use this source code for any commercial purpose,
 or use it for commercial purposes after secondary development, otherwise you may bear legal risks.
 */
 
-package mysql
+package postgres
 
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	"lepus/src/libary/conf"
+	_ "github.com/lib/pq"
 )
 
 var err error
 
-func InitConnect() *sql.DB {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?timeout=5s&readTimeout=10s", conf.Option["mysql_user"], conf.Option["mysql_password"], conf.Option["mysql_host"], conf.Option["mysql_port"], conf.Option["mysql_database"]))
-	if err != nil {
-		panic(fmt.Sprintln("Init mysql connect err,", err))
-	}
-	if err := db.Ping(); err != nil {
-		panic(fmt.Sprintln("Init mysql connect err,", err))
-	}
-	return db
-}
-
-func Connect(host, port, username, password, database string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?timeout=3s&readTimeout=5s", username, password, host, port, database))
+func NewConnect(host, port, username, password, database string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, username, password, database))
 	if err != nil {
 		return nil, err
 	}
@@ -45,14 +33,6 @@ func Connect(host, port, username, password, database string) (*sql.DB, error) {
 		return nil, err
 	}
 	return db, nil
-}
-
-func Execute(db *sql.DB, sql string) (err error) {
-	_, err = db.Exec(sql)
-	if err != nil {
-		return err
-	}
-	return
 }
 
 func QueryOne(db *sql.DB, sql string) (data string, err error) {
@@ -63,8 +43,8 @@ func QueryOne(db *sql.DB, sql string) (data string, err error) {
 	return
 }
 
-func QueryAll(db *sql.DB, sql string) ([]map[string]interface{}, error) {
-	rows, err := db.Query(sql)
+func QueryAll(db *sql.DB, sql string, args ...interface{}) ([]map[string]interface{}, error) {
+	rows, err := db.Query(sql, args...)
 	if err != nil {
 		return nil, err
 	}

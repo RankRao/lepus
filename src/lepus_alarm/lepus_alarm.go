@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2021 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -17,14 +17,17 @@ or use it for commercial purposes after secondary development, otherwise you may
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/nsqio/go-nsq"
+	"net/http"
 	"os"
 	"os/signal"
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/nsqio/go-nsq"
 
 	"lepus/src/libary/conf"
 	"lepus/src/libary/conv"
@@ -61,20 +64,23 @@ var rds = redis.InitClient()
 send alarm function
 */
 func sendAlarm(event, rule map[string]interface{}, match bool) {
+	eventUuid := event["event_uuid"].(string)
 	eventTime := event["event_time"].(string)
 	eventType := event["event_type"].(string)
 	eventGroup := event["event_group"].(string)
 	eventKey := event["event_key"].(string)
 	eventEntity := event["event_entity"].(string)
-	eventValue := event["event_value"].(float64)
+	eventValue := utils.FormatFloat64(event["event_value"].(float64))
 	eventTag := event["event_tag"].(string)
 	eventUnit := event["event_unit"].(string)
 
 	ruleId := rule["id"].(string)
 	alarmTitle := rule["title"].(string)
-	alarmLevel := rule["alarm_level"].(string)
+	alarmRule := rule["alarm_rule"].(string)
+	alarmValue := rule["alarm_value"].(string)
 	alarmSleep := conv.StrToInt(rule["alarm_sleep"].(string))
 	alarmTimes := conv.StrToInt(rule["alarm_times"].(string))
+	levelId := conv.StrToInt(rule["level_id"].(string))
 	channelId := conv.StrToInt(rule["channel_id"].(string))
 
 	keyName := fmt.Sprintf("%s:%s:%s:%s", eventType, eventKey, eventTag, eventEntity)
@@ -88,24 +94,40 @@ func sendAlarm(event, rule map[string]interface{}, match bool) {
 			alarmCount = "0"
 			if alarmAt == "" {
 				rds.Set(alarmAtKeyName, time.Now().Unix(), time.Hour*time.Duration(72))
+				log.Info(fmt.Sprintf("Set alarm at key %s", alarmAtKeyName))
 			}
 		}
 		alarmCountInt := conv.StrToInt(alarmCount)
 		if alarmCountInt < alarmTimes {
+			var alarmLevel = ""
+			getLevelSql := fmt.Sprintf("select level_name from alarm_levels where enable=1 and id=%d ", levelId)
+			levelList, _ := mysql.QueryAll(db, getLevelSql)
+			if len(levelList) > 0 {
+				if levelList[0]["level_name"] != nil {
+					alarmLevel = levelList[0]["level_name"].(string)
+				} else {
+					alarmLevel = ""
+				}
+			}
 			var (
-				sendMail  = 0
-				sendPhone = 0
+				sendMail    = 0
+				sendWebhook = 0
 			)
-			sql := fmt.Sprintf("select name,mail_list,phone_list from alarm_channels where enable=1 and id=%d ", channelId)
-			channelList, _ := mysql.QueryAll(db, sql)
+			getChannelSql := fmt.Sprintf("select name,mail_enable,webhook_enable,mail_list,webhook_url from alarm_channels where enable=1 and id=%d ", channelId)
+			channelList, _ := mysql.QueryAll(db, getChannelSql)
 			if len(channelList) > 0 {
 				rds.Incr(alarmCountKeyName)
 				rds.Expire(alarmCountKeyName, time.Second*time.Duration(alarmSleep))
+				log.Info(fmt.Sprintf("Set alarm count key %s", alarmCountKeyName))
 				channel := channelList[0]
+				mailEnable := utils.StrToInt(channel["mail_enable"].(string))
+				webhookEnable := utils.StrToInt(channel["webhook_enable"].(string))
 				mailList := channel["mail_list"].(string)
-				phoneList := channel["phone_list"].(string)
-				if mailList != "" {
+				webhookUrl := channel["webhook_url"].(string)
+				if mailEnable == 1 && mailList != "" {
+					log.Info(fmt.Sprintf("Start to send email to %s", mailList))
 					mailTo := strings.Split(mailList, ";")
+					tableTitle := "事件概览"
 					tableHeader := []string{"名称", "内容"}
 					dataList := make([][]string, 0)
 					data := make([]string, 0)
@@ -129,30 +151,59 @@ func sendAlarm(event, rule map[string]interface{}, match bool) {
 					data = make([]string, 0)
 					data = append(data, "事件数值", utils.FloatToStr(eventValue)+eventUnit)
 					dataList = append(dataList, data)
-					tableTitle := alarmTitle
-					eventContent := html.CreateTable(alarmTitle, tableTitle, tableHeader, dataList)
+					data = make([]string, 0)
+					data = append(data, "触发规则", fmt.Sprintf("%s%s%s", eventKey, alarmRule, alarmValue))
+					dataList = append(dataList, data)
 
-					mailContent := eventContent
+					eventContent := html.CreateTable(tableTitle, tableHeader, dataList)
+
+					mailHello := fmt.Sprintf("尊敬的用户：<p></p>您好！您收到一条【%s】事件：【%s】，请您及时关注和处理。", alarmLevel, alarmTitle)
+					mailContent := "<span style='margin-top:1px;'>" + mailHello + "</span><p></p>" + eventContent + "</div><div style='margin-top:30px; color:#666'><hr color='#ccc' style='border:1px dashed #cccccc;' />本邮件来自Lepus实时事件告警组件，请勿直接回复本邮件。如需获得技术支持，可联系我们：<a href='https://www.lepus.cc' target='_blank'>https://www.lepus.cc</a></div>"
 					//fmt.Println(mailContent)
 					//return
 					mailTitle := fmt.Sprintf("[%s][%s]%s", alarmLevel, eventEntity, alarmTitle)
-					log.Info(fmt.Sprintln("Start to send mail :", mailTitle))
 					if err := mail.Send(mailTo, mailTitle, mailContent); err != nil {
-						sendMail = -1
-						log.Error(fmt.Sprintln("send alarm mail error:", err))
+						sendMail = 2
+						log.Error(fmt.Sprintf("Failed to send email %s,%s: %s", mailTitle, mailList, err))
 					} else {
 						sendMail = 1
+						log.Info(fmt.Sprintf("Success to send email %s,%s", mailTitle, mailList))
 					}
 				}
-				if phoneList != "" {
-					log.Info(fmt.Sprintln("Start to fake send phone :", phoneList))
+
+				if webhookEnable == 1 && webhookUrl != "" {
+					log.Info(fmt.Sprintf("Start to call webhook to %s", webhookUrl))
+					//post数据
+					eventData := map[string]interface{}{
+						"alarm_title":  alarmTitle,
+						"alarm_rule":   alarmRule,
+						"alarm_value":  alarmValue,
+						"event_time":   eventTime,
+						"event_type":   eventType,
+						"event_group":  eventGroup,
+						"event_entity": eventEntity,
+						"event_key":    eventKey,
+						"event_value":  eventValue,
+						"event_tag":    eventTag,
+					}
+					client := &http.Client{Timeout: 3 * time.Second}
+					jsonStr, _ := json.Marshal(eventData)
+					resp, err := client.Post(webhookUrl, "application/json", bytes.NewBuffer(jsonStr))
+					if err != nil {
+						sendWebhook = 2
+						log.Error(fmt.Sprintf("Failed to call webhook %s: %s", webhookUrl, err))
+					} else {
+						sendWebhook = 1
+						log.Info(fmt.Sprintf("Success to call webhook %s", webhookUrl))
+						resp.Body.Close()
+					}
 				}
 			}
-			log.Info(fmt.Sprintln("Insert alarm event data to mysql database"))
-			insertAlarmSql := fmt.Sprintf("insert into alarm_events(alarm_title,alarm_level,event_time,event_type,event_group,event_entity,event_key,event_value,event_tag,rule_id,send_mail,send_phone) values(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%f\",\"%s\",\"%s\",\"%d\",\"%d\")", alarmTitle, alarmLevel, eventTime, eventType, eventGroup, eventEntity, eventKey, eventValue, eventTag, ruleId, sendMail, sendPhone)
+
+			insertAlarmSql := fmt.Sprintf("insert into alarm_events(alarm_title,alarm_level,alarm_rule,alarm_value,event_uuid,event_time,event_type,event_group,event_entity,event_key,event_value,event_unit,event_tag,rule_id,level_id,channel_id,send_mail,send_webhook) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%f','%s','%s','%s','%d','%d','%d','%d')", alarmTitle, alarmLevel, alarmRule, alarmValue, eventUuid, eventTime, eventType, eventGroup, eventEntity, eventKey, eventValue, eventUnit, eventTag, ruleId, levelId, channelId, sendMail, sendWebhook)
 			err := mysql.Execute(db, insertAlarmSql)
 			if err != nil {
-				log.Error(fmt.Sprintln("Can't insert alarm event data to mysql database, ", err))
+				log.Error(fmt.Sprintln("Failed insert alarm event data to database, ", err))
 				return
 			}
 
@@ -167,24 +218,24 @@ func sendAlarm(event, rule map[string]interface{}, match bool) {
 func getAlarmRule(eventType, eventGroup, eventEntity, eventKey string) []map[string]interface{} {
 	var sql string
 	if eventEntity != "" {
-		sql = fmt.Sprintf("select id,title,alarm_rule,alarm_value,alarm_level,alarm_sleep,alarm_times,channel_id from alarm_rules "+
-			"where enable=1 and event_type='%s' and event_key='%s' and event_entity='%s'  order by alarm_level asc", eventType, eventKey, eventEntity)
+		sql = fmt.Sprintf("select id,title,alarm_rule,alarm_value,alarm_sleep,alarm_times,level_id,channel_id from alarm_rules "+
+			"where enable=1 and event_type='%s' and event_key='%s' and event_entity='%s'  order by level_id asc", eventType, eventKey, eventEntity)
 		res, _ := mysql.QueryAll(db, sql)
 		if len(res) > 0 {
 			return res
 		}
 	}
 	if eventGroup != "" {
-		sql = fmt.Sprintf("select id,title,alarm_rule,alarm_value,alarm_level,alarm_sleep,alarm_times,channel_id from alarm_rules "+
-			"where enable=1 and  event_type='%s' and event_key='%s' and event_group='%s'  order by alarm_level asc", eventType, eventKey, eventGroup)
+		sql = fmt.Sprintf("select id,title,alarm_rule,alarm_value,alarm_sleep,alarm_times,level_id,channel_id from alarm_rules "+
+			"where enable=1 and  event_type='%s' and event_key='%s' and event_group='%s'  order by level_id asc", eventType, eventKey, eventGroup)
 		res, _ := mysql.QueryAll(db, sql)
 		if len(res) > 0 {
 			return res
 		}
 	}
 
-	sql = fmt.Sprintf("select id,title,alarm_rule,alarm_value,alarm_level,alarm_sleep,alarm_times,channel_id from alarm_rules "+
-		"where enable=1 and  event_type='%s' and event_key='%s'  order by alarm_level asc", eventType, eventKey)
+	sql = fmt.Sprintf("select id,title,alarm_rule,alarm_value,alarm_sleep,alarm_times,level_id,channel_id from alarm_rules "+
+		"where enable=1 and  event_type='%s' and event_key='%s'  order by level_id asc", eventType, eventKey)
 	res, err := mysql.QueryAll(db, sql)
 	if err != nil {
 		log.Error(fmt.Sprintln("query alarm rule err:", err))
@@ -257,6 +308,7 @@ func alarm(value string) {
 }
 
 //nsq订阅消息
+
 type ConsumerT struct{}
 
 func (*ConsumerT) HandleMessage(msg *nsq.Message) error {
@@ -273,6 +325,7 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	/*
+		kafka消息消费代码，目前已经使用nsq代替，代码暂时保留
 		consumer, err := kafka.NewConsumer(kafkaClient)
 		if err != nil {
 			log.Error(fmt.Sprintln("Create new kafka consumer err:", err))

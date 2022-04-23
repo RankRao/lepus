@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2021 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -17,9 +17,9 @@ or use it for commercial purposes after secondary development, otherwise you may
 package tool
 
 import (
-	"fmt"
-	"github.com/satori/go.uuid"
 	"time"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 func GetUUID() string {
@@ -29,6 +29,6 @@ func GetUUID() string {
 
 func GetNowTime() string {
 	now := time.Now()
-	nowTime := fmt.Sprintf("%d-%d-%d %d:%d:%d", now.Year(), int(now.Month()), now.Day(), now.Hour(), now.Minute(), now.Second())
+	nowTime := now.Format("2006-01-02 15:04:05")
 	return nowTime
 }

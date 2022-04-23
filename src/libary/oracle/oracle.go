@@ -14,30 +14,18 @@ Please do not use this source code for any commercial purpose,
 or use it for commercial purposes after secondary development, otherwise you may bear legal risks.
 */
 
-package mysql
+package oracle
 
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	"lepus/src/libary/conf"
+	_ "github.com/godror/godror"
 )
 
 var err error
 
-func InitConnect() *sql.DB {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?timeout=5s&readTimeout=10s", conf.Option["mysql_user"], conf.Option["mysql_password"], conf.Option["mysql_host"], conf.Option["mysql_port"], conf.Option["mysql_database"]))
-	if err != nil {
-		panic(fmt.Sprintln("Init mysql connect err,", err))
-	}
-	if err := db.Ping(); err != nil {
-		panic(fmt.Sprintln("Init mysql connect err,", err))
-	}
-	return db
-}
-
-func Connect(host, port, username, password, database string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?timeout=3s&readTimeout=5s", username, password, host, port, database))
+func NewConnect(host, port, username, password, sid string) (*sql.DB, error) {
+	db, err := sql.Open("godror", fmt.Sprintf(`user="%s" password="%s" connectString="%s:%s/%s"`, username, password, host, port, sid))
 	if err != nil {
 		return nil, err
 	}

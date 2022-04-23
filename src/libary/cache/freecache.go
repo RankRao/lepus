@@ -14,18 +14,48 @@ Please do not use this source code for any commercial purpose,
 or use it for commercial purposes after secondary development, otherwise you may bear legal risks.
 */
 
-package cmd
+package cache
 
 import (
-	"os/exec"
+	"fmt"
+
+	"github.com/coocood/freecache"
 )
 
-func Run(cmd string, shell bool) ([]byte, error) {
-	if shell {
-		out, err := exec.Command("bash", "-c", cmd).Output()
-		if err != nil {
-			return nil, err
-		}
-		return out, nil
+var cache = freecache.NewCache(25 * 1024 * 1024) //25M Cache
+
+func Set(key, val string, expire int) error {
+	keyByte := []byte(key)
+	valByte := []byte(val)
+	expire = 60 // expire in 60 seconds
+	err := cache.Set(keyByte, valByte, expire)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func Get(key string) (string, error) {
+	keyByte := []byte(key)
+	got, err := cache.Get(keyByte)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s", got), nil
+
+}
+
+/*
+func main() {
+	err := Set("proxy", "127.0.0.1;192.168.10.1", 60)
+	if err != nil {
+		fmt.Println(err)
+	}
+	data, err := Get("proxy")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(data)
 	}
 }
+*/

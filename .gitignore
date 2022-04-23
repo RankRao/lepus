@@ -1,6 +1,9 @@
 /etc/config.ini
 /etc/proxy.ini
 /etc/alarm.ini
-/bin/*
+/etc/agent.ini
 /vendor/*
+/bin/*
 .idea
+nohup.out
+.DS_Store

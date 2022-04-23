@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2021 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -29,7 +29,7 @@ func InitClient() *redis.Client {
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:         fmt.Sprintf("%s:%s", conf.Option["redis_host"], conf.Option["redis_port"]),
 		Password:     conf.Option["redis_pass"], // no password set
-		DB:           0,  // use default DB
+		DB:           0,                         // use default DB
 		PoolSize:     1000,
 		ReadTimeout:  time.Millisecond * time.Duration(200),
 		WriteTimeout: time.Millisecond * time.Duration(200),

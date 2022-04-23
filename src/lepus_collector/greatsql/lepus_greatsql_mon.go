@@ -30,7 +30,7 @@ import (
 	"time"
 )
 
-var log = logger.NewLog(conf.Option["log_dir"]+"/lepus_mysql_mon.log", conv.StrToInt(conf.Option["debug"]))
+var log = logger.NewLog(conf.Option["log_dir"]+"/lepus_greatsql_mon.log", conv.StrToInt(conf.Option["debug"]))
 var dbClient = mysql.InitConnect()
 
 var (
@@ -39,14 +39,15 @@ var (
 	queryVariablesSQL = "show global variables"
 )
 
-func collectorMySQL(dbType, dbGroup, ip, port, user, pass, tag string) {
+func collectorGreatSql(dbType, dbGroup, ip, port, user, pass, tag string) {
 	log.Info(fmt.Sprintf("Start check instance %s:%s at %s", ip, port, time.Now()))
 	mydb, err := mysql.Connect(ip, port, user, pass, "information_schema")
 	eventEntity := fmt.Sprintf("%s:%s", ip, port)
 
 	if err != nil {
-		log.Error(fmt.Sprintf("Can't connect to mysql database on %s:%s, %s", ip, port, err))
+		log.Error(fmt.Sprintf("Can't connect to greatsql database on %s:%s, %s", ip, port, err))
 		events := make([]map[string]interface{}, 0)
+		//detail = append(detail, map[string]string{"Error": fmt.Sprint(err), "Into":"BBB"})
 		event := map[string]interface{}{
 			"event_time":   tool.GetNowTime(),
 			"event_type":   dbType,
@@ -286,7 +287,6 @@ func collectorMySQL(dbType, dbGroup, ip, port, user, pass, tag string) {
 		"event_tag":    tag,
 		"event_unit":   "",
 	}
-	events = append(events, event)
 
 	event = map[string]interface{}{
 		"event_time":   tool.GetNowTime(),
@@ -547,7 +547,7 @@ func collectorMySQL(dbType, dbGroup, ip, port, user, pass, tag string) {
 		log.Error(fmt.Sprintln("Send events to proxy error:", err))
 	}
 
-	insertSQL := fmt.Sprintf("insert into dashboard_mysql(host,port,tag,connect,hostname,version,timezone,uptime,readonly,max_connections,open_files_limit,open_files,"+
+	insertSQL := fmt.Sprintf("insert into dashboard_greatsql(host,port,tag,connect,hostname,version,timezone,uptime,readonly,max_connections,open_files_limit,open_files,"+
 		"table_open_cache,open_tables,threads_connected,threads_running,threads_created,threads_cached,connections,aborted_clients,aborted_connects,bytes_received,bytes_sent,"+
 		"com_select,com_insert,com_update,com_delete,com_commit,com_rollback,questions,queries,slow_queries,key_buffer_size,sort_buffer_size,join_buffer_size,innodb_pages_created,innodb_pages_read,innodb_pages_written,"+
 		"innodb_row_lock_current_waits,innodb_buffer_pool_read_requests,innodb_buffer_pool_write_requests,innodb_rows_read,innodb_rows_inserted,innodb_rows_updated,innodb_rows_deleted )"+
@@ -567,8 +567,8 @@ func collectorMySQL(dbType, dbGroup, ip, port, user, pass, tag string) {
 
 }
 
-func scanMysql() {
-	rows, err := mysql.QueryAll(dbClient, "select ip,port,user,pass,module_name,cluster_name,env_name,idc_name from meta_nodes a join meta_clusters b on a.cluster_id=b.id join meta_modules c on b.module_id=c.id join meta_hosts d on a.ip=d.ip_address join meta_envs e on d.env_id=e.id join meta_idcs f on d.idc_id=f.id where a.monitor=1 and c.module_name ='MySQL' ")
+func scanGreatSql() {
+	rows, err := mysql.QueryAll(dbClient, "select ip,port,user,pass,module_name,cluster_name,env_name,idc_name from meta_nodes a join meta_clusters b on a.cluster_id=b.id join meta_modules c on b.module_id=c.id join meta_hosts d on a.ip=d.ip_address join meta_envs e on d.env_id=e.id join meta_idcs f on d.idc_id=f.id where a.monitor=1 and c.module_name ='GreatSQL' ")
 	if err != nil {
 		log.Error(fmt.Sprintln("Can't query mysql database, ", err))
 		return
@@ -579,7 +579,7 @@ func scanMysql() {
 			log.Error("Encrypt Password Error.")
 			return
 		}
-		go collectorMySQL(row["module_name"].(string), row["env_name"].(string), row["ip"].(string), row["port"].(string), row["user"].(string), origPass, row["cluster_name"].(string))
+		go collectorGreatSql(row["module_name"].(string), row["env_name"].(string), row["ip"].(string), row["port"].(string), row["user"].(string), origPass, row["cluster_name"].(string))
 	}
 }
 
@@ -592,7 +592,7 @@ func main() {
 	//	scanMysql()
 	//	time.Sleep(time.Duration(conv.StrToInt(conf.Option["interval"])) * time.Second)
 	//}
-	scanMysql()
+	scanGreatSql()
 	time.Sleep(time.Duration(8) * time.Second)
 	defer dbClient.Close()
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2021 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -18,9 +18,9 @@ package html
 
 import "reflect"
 
-func CreateTable(title string, tableTitle string, header []string, dataList [][]string) string {
+func CreateTable(tableTitle string, header []string, dataList [][]string) string {
 	var table, tableHeader, tableFooter, tableTh, tableTd, tableTr string
-	tableHeader = "<style type='text/css'>table{border-collapse: collapse; margin: 0 auto; text-align: center;} table td, table th{border: 1px solid #cad9ea; color: #666;height: 30px;} table thead th{background-color: #CCE8EB;width: 100px;}table tr:nth-child(odd) {background: #fff;} table tr:nth-child(even) { background: #F5FAFA;} </style><table width='80%' class='table' >" +
+	tableHeader = "<style type='text/css'>table{border-collapse: collapse; margin: 0 auto; margin-top:20px; text-align: left; padding-left:10px; font-size:13px;} table td, table th{border: 1px solid #DCDCDC; color: #333;height: 30px;} table thead th{background-color: #336699; color: #FFF;}table tr:nth-child(odd) {background: #fff;} table tr:nth-child(even) { background: #fff;} </style><table width='85%' class='table' >" +
 		"<caption><center><h2>" + tableTitle + "</h2></center></caption>"
 	for _, td := range header {
 		tableTh = tableTh + "<th>&nbsp;" + string(td) + "</th>"
@@ -41,7 +41,7 @@ func CreateTable(title string, tableTitle string, header []string, dataList [][]
 
 func CreateTableFromSliceMap(tableTitle string, eventDetail []interface{}) string {
 	var table, tableHeader, tableFooter, tableTh, tableTd, tableTr string
-	tableHeader = "<style type='text/css'>table{border-collapse: collapse; margin: 1 auto; text-align: center;} table td, table th{border: 1px solid #cad9ea; color: #666;height:30px;} table thead th{background-color: #CCE8EB;width: 100px;}table tr:nth-child(odd) {background: #fff;} table tr:nth-child(even) { background: #F5FAFA;} </style><table width='80%' class='table' >" +
+	tableHeader = "<style type='text/css'>table{border-collapse: collapse; margin: 0 auto; margin-top:20px; text-align: left; padding-left:15px;} table td, table th{border: 1px solid #DCDCDC; color: #333;height:30px;font-size:14px; padding:3px;} table thead th{background-color: #336699; color: #FFF; width: 100px;}table tr:nth-child(odd) {background: #fff;} table tr:nth-child(even) { background: #fff;} </style><table width='85%' class='table' >" +
 		"<caption><center><h2>" + tableTitle + "</h2></center></caption>"
 	keys := reflect.ValueOf(eventDetail[0]).MapKeys()
 	for _, key := range keys {
