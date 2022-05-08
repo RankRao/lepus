@@ -173,19 +173,42 @@ func sendAlarm(event, rule map[string]interface{}, match bool) {
 
 				if webhookEnable == 1 && webhookUrl != "" {
 					log.Info(fmt.Sprintf("Start to call webhook to %s", webhookUrl))
-					//post数据
-					eventData := map[string]interface{}{
-						"alarm_title":  alarmTitle,
-						"alarm_rule":   alarmRule,
-						"alarm_value":  alarmValue,
-						"event_time":   eventTime,
-						"event_type":   eventType,
-						"event_group":  eventGroup,
-						"event_entity": eventEntity,
-						"event_key":    eventKey,
-						"event_value":  eventValue,
-						"event_tag":    eventTag,
+					eventData := make(map[string]interface{})
+					//webhookUrl 中包含 "oapi.dingtalk.com" 则构造钉钉自定义机器人的post数据
+					if strings.Contains(webhookUrl, "oapi.dingtalk.com") {
+						//init dingtalk config
+						alarm_url := conf.Option["alarm_url"]
+						eventData = map[string]interface{}{
+							"msgtype": "markdown",
+							"markdown": map[string]string{
+								"title": alarmTitle,
+								"text": "#### **" + alarmTitle + "** \n " +
+									"> ##### 事件时间: " + eventTime + " \n " +
+									"> ##### 事件类型: " + eventType + " \n " +
+									"> ##### 事件组别: " + eventGroup + " \n " +
+									"> ##### 事件实体: " + eventEntity + " \n " +
+									"> ##### 事件标签: " + eventTag + " \n " +
+									"> ##### 事件指标: " + eventKey + " \n " +
+									"> ##### 事件数值: " + alarmValue + " \n " +
+									"> ##### 触发规则: " + alarmRule + utils.FloatToStr(eventValue) + " \n " +
+									"###### [查看详情](" + alarm_url + ") \n"},
+						}
+					} else {
+						//post数据
+						eventData = map[string]interface{}{
+							"alarm_title":  alarmTitle,
+							"alarm_rule":   alarmRule,
+							"alarm_value":  alarmValue,
+							"event_time":   eventTime,
+							"event_type":   eventType,
+							"event_group":  eventGroup,
+							"event_entity": eventEntity,
+							"event_key":    eventKey,
+							"event_value":  eventValue,
+							"event_tag":    eventTag,
+						}
 					}
+					log.Debug(fmt.Sprintf("webhook post content %s", eventData))
 					client := &http.Client{Timeout: 3 * time.Second}
 					jsonStr, _ := json.Marshal(eventData)
 					resp, err := client.Post(webhookUrl, "application/json", bytes.NewBuffer(jsonStr))
