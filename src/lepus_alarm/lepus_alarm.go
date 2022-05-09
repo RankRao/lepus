@@ -189,8 +189,8 @@ func sendAlarm(event, rule map[string]interface{}, match bool) {
 									"> ##### 事件实体: " + eventEntity + " \n " +
 									"> ##### 事件标签: " + eventTag + " \n " +
 									"> ##### 事件指标: " + eventKey + " \n " +
-									"> ##### 事件数值: " + alarmValue + " \n " +
-									"> ##### 触发规则: " + alarmRule + utils.FloatToStr(eventValue) + " \n " +
+									"> ##### 事件数值: " + utils.FloatToStr(eventValue) + eventUnit + " \n " +
+									"> ##### 触发规则: " + eventKey + alarmRule + alarmValue + " \n " +
 									"###### [查看详情](" + alarm_url + ") \n"},
 						}
 					} else {
