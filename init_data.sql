@@ -5,8 +5,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Records of alarm_channels
 -- ----------------------------
-INSERT INTO `alarm_channels` VALUES (1, '默认渠道', 0, '', 1, '', '默认事件发送渠道', 1, '2021-02-27 20:28:33', '2022-04-22 11:20:56');
-INSERT INTO `alarm_channels` VALUES (2, '紧急渠道', 1, '', 1, '', '紧急事件报警渠道', 1, '2021-03-20 16:08:21', '2022-04-22 11:20:59');
+INSERT INTO `alarm_channels` VALUES (1, '默认渠道', 0, '', 1, '', '默认事件发送渠道', 1, '2021-02-27 20:28:33', '2022-04-23 12:35:58');
+INSERT INTO `alarm_channels` VALUES (2, '紧急渠道', 1, '', 1, '', '紧急事件报警渠道', 1, '2021-03-20 16:08:21', '2022-04-23 12:36:01');
 
 -- ----------------------------
 -- Records of alarm_levels
@@ -21,7 +21,7 @@ INSERT INTO `alarm_levels` VALUES (5, '严重', '用于严重故障通知的级�
 -- Records of alarm_rules
 -- ----------------------------
 INSERT INTO `alarm_rules` VALUES (1, 'MySQL QPS过高', 'MySQL', '', 'queries', '', '>', '0', 21600, 2, 1, 3, 1, '2021-02-16 10:54:55', '2022-04-22 10:39:41');
-INSERT INTO `alarm_rules` VALUES (2, 'MySQL数据库无法连接', 'MySQL', '', 'connect', '', '!=', '1', 10800, 1, 1, 2, 2, '2021-02-27 20:00:05', '2022-04-21 16:26:13');
+INSERT INTO `alarm_rules` VALUES (2, 'MySQL数据库无法连接', 'MySQL', '', 'connect', '', '!=', '1', 10800, 1, 1, 2, 2, '2021-02-27 20:00:05', '2022-04-23 10:29:21');
 INSERT INTO `alarm_rules` VALUES (4, 'MySQL活动事务量过高', 'MySQL', '', 'ActiveTrx', '', '>', '10', 21600, 2, 1, 2, 1, '2021-03-26 23:27:58', '2022-04-20 11:14:22');
 INSERT INTO `alarm_rules` VALUES (5, 'MySQL活动会话数过高', 'MySQL', '', 'threadsRunning', '', '>', '20', 10800, 2, 1, 3, 1, '2021-03-29 22:33:34', '2022-04-20 11:14:27');
 INSERT INTO `alarm_rules` VALUES (6, 'MySQL连接数过高', 'MySQL', '', 'threadsConnected', '', '>', '1000', 10800, 2, 1, 3, 1, '2021-04-02 23:39:52', '2022-04-20 11:14:33');
@@ -50,6 +50,10 @@ INSERT INTO `alarm_rules` VALUES (53, 'Redis数据库无法连接', 'Redis', '',
 INSERT INTO `alarm_rules` VALUES (55, 'Redis每秒请求数过高', 'Redis', '', 'instantaneousOpsPerSec', '', '>', '2000', 10800, 2, 1, 3, 1, '2022-04-20 21:02:25', '2022-04-20 21:03:15');
 INSERT INTO `alarm_rules` VALUES (56, 'Redis连接数过高', 'Redis', '', 'connectedClients', '', '>', '1000', 10800, 2, 1, 3, 1, '2022-04-20 21:04:58', '2022-04-20 21:04:58');
 INSERT INTO `alarm_rules` VALUES (57, 'Redis连接阻塞数过高', 'Redis', '', 'blockedClients', '', '>', '10', 10800, 2, 1, 3, 1, '2022-04-20 21:06:56', '2022-04-20 21:06:56');
+INSERT INTO `alarm_rules` VALUES (58, 'SQLServer数据库无法连接', 'SQLServer', NULL, 'connect', NULL, '!=', '0', 10800, 2, 1, 5, 2, '2022-06-05 14:13:44', '2022-06-05 14:13:44');
+INSERT INTO `alarm_rules` VALUES (59, 'SQLServer进程数过高', 'SQLServer', NULL, 'process', NULL, '>', '1000', 10800, 2, 1, 3, 1, '2022-06-05 14:14:18', '2022-06-05 14:14:33');
+INSERT INTO `alarm_rules` VALUES (60, 'SQLServer活动进程数过高', 'SQLServer', NULL, 'processRunning', NULL, '>', '20', 10800, 2, 1, 3, 1, '2022-06-05 14:15:24', '2022-06-05 14:15:24');
+INSERT INTO `alarm_rules` VALUES (61, 'SQLServer事务数过高', 'SQLServer', NULL, 'tranCount', NULL, '>', '1000', 10800, 2, 1, 3, 1, '2022-06-05 14:16:13', '2022-06-05 14:16:13');
 
 -- ----------------------------
 -- Records of meta_modules
@@ -62,23 +66,27 @@ INSERT INTO `meta_modules` VALUES (5, 'MongoDB', '', '2021-04-19 21:48:38', '202
 INSERT INTO `meta_modules` VALUES (6, 'SQLServer', '', '2021-04-19 21:48:56', '2021-04-19 21:48:56');
 INSERT INTO `meta_modules` VALUES (7, 'ClickHouse', '', '2021-04-19 21:49:15', '2021-04-19 21:49:15');
 INSERT INTO `meta_modules` VALUES (8, 'Web', '', '2022-01-25 21:56:12', '2022-01-25 21:56:12');
-INSERT INTO `meta_modules` VALUES (9, 'GreatSQL', '', '2022-03-18 17:32:41', '2022-04-21 18:17:10');
+INSERT INTO `meta_modules` VALUES (9, 'GreatSQL', '', '2022-03-18 17:32:41', '2022-04-23 12:21:38');
+
 
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES (2, 1, 'Redis Health Check', './lepus_redis_mon', '', 'period', '', 30, '2022-04-21 17:39:33', 0, 'waiting', 1, NULL, 0, '2021-03-14 21:30:22', '2022-04-21 17:40:37');
-INSERT INTO `task` VALUES (3, 1, 'Web Health Check', './lepus_web_mon', '', 'period', '', 180, '2022-04-21 17:39:49', 0, 'waiting', 1, NULL, 0, '2022-01-26 22:56:54', '2022-04-21 17:39:41');
-INSERT INTO `task` VALUES (4, 1, 'MongoDB Health Check', './lepus_mongo_mon', '', 'period', '', 60, '2022-04-21 17:40:07', 0, 'waiting', 1, NULL, 0, '2022-01-29 15:33:00', '2022-04-21 17:40:39');
-INSERT INTO `task` VALUES (5, 1, 'Oracle Health Check', './lepus_oracle_mon', '', 'period', '', 120, '2022-04-21 17:40:50', 0, 'waiting', 1, NULL, 0, '2022-03-18 19:02:41', '2022-04-21 17:39:43');
-INSERT INTO `task` VALUES (6, 1, 'GreatSQL Health Check', './lepus_greatsql_mon', '', 'period', '', 120, '2022-04-21 17:40:51', 0, 'waiting', 1, NULL, 0, '2022-04-12 19:39:05', '2022-04-21 17:39:44');
-INSERT INTO `task` VALUES (7, 1, 'PostgreSQL Health Check', './lepus_postgres_mon', '', 'period', '', 120, '2022-04-21 17:40:53', 0, 'waiting', 1, NULL, 0, '2022-04-18 12:36:43', '2022-04-21 17:39:45');
-INSERT INTO `task` VALUES (8, 1, 'MySQL Health Check', './lepus_mysql_mon', '', 'period', '', 30, '2022-04-21 17:40:12', 0, 'waiting', 1, NULL, 0, '2021-03-13 21:01:28', '2022-04-21 17:40:40');
+INSERT INTO `task` VALUES (2, 1, 'Redis Health Check', './lepus_redis_mon', '', 'period', '', 60, '2022-05-27 14:30:54', 0, 'waiting', 1, NULL, 0, '2021-03-14 21:30:22', '2022-06-05 14:28:32');
+INSERT INTO `task` VALUES (3, 1, 'Web Health Check', './lepus_web_mon', '', 'period', '', 180, '2022-05-27 14:09:02', 0, 'waiting', 1, NULL, 0, '2022-01-26 22:56:54', '2022-05-27 14:06:03');
+INSERT INTO `task` VALUES (4, 1, 'MongoDB Health Check', './lepus_mongo_mon', '', 'period', '', 60, '2022-05-27 14:47:12', 0, 'waiting', 1, NULL, 0, '2022-01-29 15:33:00', '2022-05-27 14:46:12');
+INSERT INTO `task` VALUES (5, 1, 'Oracle Health Check', './lepus_oracle_mon', '', 'period', '', 120, '2022-05-27 13:55:36', 0, 'waiting', 1, NULL, 0, '2022-03-18 19:02:41', '2022-05-27 13:53:37');
+INSERT INTO `task` VALUES (6, 1, 'GreatSQL Health Check', './lepus_greatsql_mon', '', 'period', '', 120, '2022-05-27 14:08:09', 0, 'waiting', 1, NULL, 0, '2022-04-12 19:39:05', '2022-05-27 14:06:11');
+INSERT INTO `task` VALUES (7, 1, 'PostgreSQL Health Check', './lepus_postgres_mon', '', 'period', '', 120, '2022-05-27 11:34:02', 0, 'waiting', 1, NULL, 0, '2022-04-18 12:36:43', '2022-05-27 11:32:02');
+INSERT INTO `task` VALUES (8, 1, 'MySQL Health Check', './lepus_mysql_mon', '', 'period', '', 60, '2022-05-27 13:48:42', 0, 'waiting', 1, NULL, 0, '2021-03-13 21:01:28', '2022-06-05 14:28:29');
+INSERT INTO `task` VALUES (9, 1, 'SQLServer Health Check', './lepus_sqlserver_mon', '', 'period', '', 120, '2022-06-05 14:28:25', 0, 'waiting', 1, NULL, 0, '2022-06-05 14:28:25', '2022-06-05 14:28:25');
+
 
 -- ----------------------------
 -- Records of task_type
 -- ----------------------------
 INSERT INTO `task_type` VALUES (1, 0, '监控采集', NULL, '2021-03-13 20:53:30', '2021-04-15 10:42:49');
+
 
 -- ----------------------------
 -- Records of users

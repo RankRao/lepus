@@ -1,5 +1,4 @@
 
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -19,7 +18,7 @@ CREATE TABLE `alarm_channels`  (
   `gmt_created` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_updated` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for alarm_events
@@ -49,7 +48,7 @@ CREATE TABLE `alarm_events`  (
   `gmt_created` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_event_time`(`event_time`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3290 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3537 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for alarm_levels
@@ -63,7 +62,7 @@ CREATE TABLE `alarm_levels`  (
   `gmt_created` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_updated` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for alarm_rules
@@ -86,7 +85,7 @@ CREATE TABLE `alarm_rules`  (
   `gmt_created` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_updated` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 62 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for dashboard_db
@@ -143,6 +142,7 @@ CREATE TABLE `dashboard_greatsql`  (
   `port` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `tag` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `connect` tinyint(2) NOT NULL DEFAULT 0,
+  `error_info` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `hostname` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `uptime` int(10) NOT NULL DEFAULT -1,
   `version` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
@@ -188,7 +188,7 @@ CREATE TABLE `dashboard_greatsql`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_ip_port`(`host`, `port`) USING BTREE,
   INDEX `idx_gmt_create`(`gmt_create`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3468 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5509 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for dashboard_mongodb
@@ -200,6 +200,7 @@ CREATE TABLE `dashboard_mongodb`  (
   `port` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `tag` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `connect` smallint(6) NOT NULL DEFAULT 0,
+  `error_info` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `ok` tinyint(2) NOT NULL DEFAULT -1,
   `uptime` int(11) NOT NULL DEFAULT -1,
   `version` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
@@ -223,7 +224,7 @@ CREATE TABLE `dashboard_mongodb`  (
   `gmt_create` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`, `mem_mappedWithJournal`) USING BTREE,
   INDEX `idx_gmt_create`(`gmt_create`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 258087 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 262626 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for dashboard_mysql
@@ -235,6 +236,7 @@ CREATE TABLE `dashboard_mysql`  (
   `port` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `tag` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `connect` tinyint(2) NOT NULL DEFAULT 0,
+  `error_info` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `hostname` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `uptime` int(10) NOT NULL DEFAULT -1,
   `version` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
@@ -280,7 +282,7 @@ CREATE TABLE `dashboard_mysql`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_ip_port`(`host`, `port`) USING BTREE,
   INDEX `idx_gmt_create`(`gmt_create`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 861522 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 896039 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for dashboard_oracle
@@ -293,6 +295,7 @@ CREATE TABLE `dashboard_oracle`  (
   `tag` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
   `sid` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
   `connect` tinyint(2) NOT NULL DEFAULT 0,
+  `error_info` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `instance_name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `instance_role` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `instance_status` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
@@ -314,14 +317,14 @@ CREATE TABLE `dashboard_oracle`  (
   `physical_read_io_request_persecond` int(10) NOT NULL DEFAULT -1,
   `physical_write_io_request_persecond` int(10) NOT NULL DEFAULT -1,
   `os_cpu_wait_time` int(10) NOT NULL DEFAULT -1,
-  `logons_persecond` int(10) NOT NULL DEFAULT -1,
+  `logons_cumulative` int(10) NOT NULL DEFAULT -1,
   `logons_current` int(10) NOT NULL DEFAULT -1,
   `user_commits_persecond` int(10) NOT NULL DEFAULT -1,
   `user_rollbacks_persecond` int(10) NOT NULL DEFAULT -1,
   `user_calls_persecond` int(10) NOT NULL DEFAULT -1,
   `gmt_create` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14355 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 17932 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for dashboard_postgresql
@@ -333,6 +336,7 @@ CREATE TABLE `dashboard_postgresql`  (
   `port` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `tag` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `connect` tinyint(2) NOT NULL DEFAULT 0,
+  `error_info` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `start_time` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `uptime` int(10) NOT NULL DEFAULT -1,
   `version` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
@@ -358,7 +362,7 @@ CREATE TABLE `dashboard_postgresql`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_ip_port`(`host`, `port`) USING BTREE,
   INDEX `idx_gmt_create`(`gmt_create`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5874 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 16500 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for dashboard_redis
@@ -370,6 +374,7 @@ CREATE TABLE `dashboard_redis`  (
   `port` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `tag` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `connect` smallint(4) NOT NULL DEFAULT 0,
+  `error_info` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `redis_version` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `redis_mode` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `os` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
@@ -378,12 +383,12 @@ CREATE TABLE `dashboard_redis`  (
   `process_id` int(10) NOT NULL DEFAULT -1,
   `run_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `tcp_port` int(11) NOT NULL DEFAULT -1,
-  `uptime_in_seconds` int(11) NOT NULL DEFAULT -1,
+  `uptime_in_seconds` bigint(20) NOT NULL DEFAULT -1,
   `uptime_in_days` int(11) NOT NULL DEFAULT -1,
   `maxclients` int(11) NOT NULL DEFAULT -1,
-  `maxmemory` int(11) NOT NULL DEFAULT -1,
-  `connected_clients` smallint(4) NOT NULL DEFAULT -1,
-  `blocked_clients` smallint(4) NOT NULL DEFAULT -1,
+  `maxmemory` bigint(20) NOT NULL DEFAULT -1,
+  `connected_clients` int(11) NOT NULL DEFAULT -1,
+  `blocked_clients` int(11) NOT NULL DEFAULT -1,
   `used_memory` bigint(20) NOT NULL DEFAULT -1,
   `used_memory_human` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `used_memory_rss` bigint(20) NOT NULL DEFAULT -1,
@@ -418,7 +423,51 @@ CREATE TABLE `dashboard_redis`  (
   `gmt_create` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_create_time`(`gmt_create`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16663 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 105764 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for dashboard_server
+-- ----------------------------
+DROP TABLE IF EXISTS `dashboard_server`;
+CREATE TABLE `dashboard_server`  (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `hostname` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
+  `tag` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `os` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `platform` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `version` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `uptime` bigint(20) DEFAULT NULL,
+  `boot_time` datetime(0) DEFAULT NULL,
+  `cpu_physical_num` int(10) DEFAULT NULL,
+  `cpu_logical_num` int(10) DEFAULT NULL,
+  `cpu_load` decimal(10, 2) NOT NULL DEFAULT -1.00,
+  `cpu_percent` int(10) NOT NULL DEFAULT -1,
+  `memory_total` int(10) NOT NULL DEFAULT -1,
+  `memory_used` int(10) NOT NULL DEFAULT -1,
+  `memory_free` int(10) NOT NULL DEFAULT -1,
+  `memory_available` int(10) NOT NULL DEFAULT -1,
+  `memory_used_percent` int(10) NOT NULL DEFAULT -1,
+  `swap_total` int(10) NOT NULL DEFAULT -1,
+  `swap_free` int(10) NOT NULL DEFAULT -1,
+  `swap_cached` int(10) NOT NULL DEFAULT -1,
+  `disk_used_percent` int(10) NOT NULL DEFAULT -1,
+  `inodes_used_percent` int(10) NOT NULL DEFAULT -1,
+  `diskio_read_count` bigint(20) NOT NULL DEFAULT -1,
+  `diskio_write_count` bigint(20) NOT NULL DEFAULT -1,
+  `diskio_read_bytes` bigint(20) NOT NULL DEFAULT -1,
+  `diskio_write_bytes` bigint(20) NOT NULL DEFAULT -1,
+  `diskio_read_time` bigint(20) NOT NULL DEFAULT -1,
+  `diskio_write_time` bigint(20) NOT NULL DEFAULT -1,
+  `network_bytes_sent` bigint(20) NOT NULL DEFAULT -1,
+  `network_bytes_recv` bigint(20) NOT NULL DEFAULT -1,
+  `network_packets_sent` bigint(20) NOT NULL DEFAULT -1,
+  `network_packets_recv` bigint(20) NOT NULL DEFAULT -1,
+  `gmt_create` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_ip_port`(`ip`) USING BTREE,
+  INDEX `idx_gmt_create`(`gmt_create`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1088051 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for dashboard_sqlserver
@@ -426,13 +475,13 @@ CREATE TABLE `dashboard_redis`  (
 DROP TABLE IF EXISTS `dashboard_sqlserver`;
 CREATE TABLE `dashboard_sqlserver`  (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `server_id` smallint(4) NOT NULL DEFAULT 0,
   `host` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `port` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `tags` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `tag` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `connect` smallint(4) NOT NULL DEFAULT 0,
-  `role` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
-  `uptime` int(11) NOT NULL DEFAULT -1,
+  `error_info` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
+  `startup_time` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
+  `uptime` bigint(20) NOT NULL DEFAULT -1,
   `version` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '-1',
   `lock_timeout` int(11) NOT NULL DEFAULT -1,
   `trancount` int(11) NOT NULL DEFAULT -1,
@@ -440,13 +489,20 @@ CREATE TABLE `dashboard_sqlserver`  (
   `processes` int(11) NOT NULL DEFAULT -1,
   `processes_running` int(11) NOT NULL DEFAULT -1,
   `processes_waits` int(11) NOT NULL DEFAULT -1,
-  `connections_persecond` int(11) NOT NULL DEFAULT -1,
-  `pack_received_persecond` int(11) NOT NULL DEFAULT -1,
-  `pack_sent_persecond` int(11) NOT NULL DEFAULT -1,
-  `packet_errors_persecond` int(11) NOT NULL DEFAULT -1,
-  `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
+  `pack_received` bigint(20) NOT NULL DEFAULT -1,
+  `pack_sent` bigint(20) NOT NULL DEFAULT -1,
+  `packet_errors` bigint(20) NOT NULL DEFAULT -1,
+  `row_count` bigint(20) NOT NULL DEFAULT -1,
+  `cpu_busy` bigint(20) NOT NULL DEFAULT -1,
+  `io_busy` bigint(20) NOT NULL DEFAULT -1,
+  `cursor_rows` bigint(20) NOT NULL DEFAULT -1,
+  `current_write` bigint(20) NOT NULL DEFAULT -1,
+  `current_read` bigint(20) NOT NULL DEFAULT -1,
+  `current_error` bigint(20) NOT NULL DEFAULT -1,
+  `total_errors` bigint(20) NOT NULL DEFAULT -1,
+  `gmt_create` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3380 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for dashboard_web
@@ -463,7 +519,7 @@ CREATE TABLE `dashboard_web`  (
   `http_time` int(11) NOT NULL DEFAULT -1,
   `gmt_create` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 270143 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 279711 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for events
@@ -488,7 +544,7 @@ CREATE TABLE `events`  (
   INDEX `idx_entity_time`(`event_entity`, `event_time`) USING BTREE,
   INDEX `idx_type_group_entity_key_time`(`event_type`, `event_group`, `event_entity`, `event_key`, `event_time`) USING BTREE,
   INDEX `idx_event_uuid`(`event_uuid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 27339278 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 30638475 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for meta_clusters
@@ -502,7 +558,7 @@ CREATE TABLE `meta_clusters`  (
   `gmt_created` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_updated` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for meta_envs
@@ -578,7 +634,7 @@ CREATE TABLE `meta_nodes`  (
   `gmt_created` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_updated` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for meta_webs
@@ -633,7 +689,7 @@ CREATE TABLE `task_log`  (
   `gmt_create` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modify` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2135119 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 2168642 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for task_run
@@ -650,7 +706,7 @@ CREATE TABLE `task_run`  (
   `gmt_modify` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_gmt_create`(`gmt_create`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3338108 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3382816 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for task_type
