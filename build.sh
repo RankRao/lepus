@@ -9,5 +9,5 @@ go build -o ./bin/ -ldflags "-s -w" -a ./src/lepus_collector/postgres/lepus_post
 go build -o ./bin/ -ldflags "-s -w" -a ./src/lepus_collector/greatsql/lepus_greatsql_mon.go
 go build -o ./bin/ -ldflags "-s -w" -a ./src/lepus_collector/sqlserver/lepus_sqlserver_mon.go
 go build -o ./bin/ -ldflags "-s -w" -a ./src/lepus_collector/web/lepus_web_mon.go
-go build -o ./bin/ -ldflags "-s -w" -a ./src/lepus_agent/lepus_server_agent.go
+go build -o ./bin/ -ldflags "-s -w" -a ./src/lepus_agent/server/lepus_server_agent.go
 
