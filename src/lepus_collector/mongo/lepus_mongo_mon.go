@@ -25,6 +25,7 @@ import (
 	"lepus/src/libary/mysql"
 	"lepus/src/libary/tool"
 	"lepus/src/libary/utils"
+	"strings"
 	"time"
 
 	"gopkg.in/mgo.v2"
@@ -47,6 +48,7 @@ func collectorMongoDB(dbType, dbGroup, ip, port, user, pass, tag string) {
 
 	if err != nil {
 		log.Error(fmt.Sprintf("Can't connect to mongodb database on %s:%s, %s", ip, port, err))
+		errInfo := strings.Replace(fmt.Sprint(err), "'", "", -1)
 		events := make([]map[string]interface{}, 0)
 		event := map[string]interface{}{
 			"event_time":   tool.GetNowTime(),
@@ -64,7 +66,7 @@ func collectorMongoDB(dbType, dbGroup, ip, port, user, pass, tag string) {
 			log.Error(fmt.Sprintln("Send events to proxy error:", err))
 		}
 
-		insertSQL := fmt.Sprintf("insert into dashboard_mongodb(host,port,tag,connect) values('%s','%s','%s','%d')", ip, port, tag, 0)
+		insertSQL := fmt.Sprintf("insert into dashboard_mongodb(host,port,tag,connect,error_info) values('%s','%s','%s','%d','%s')", ip, port, tag, 0, errInfo)
 		err = mysql.Execute(dbClient, insertSQL)
 		if err != nil {
 			log.Error(fmt.Sprintln("Can't insert data to mysql database, ", err))
@@ -352,10 +354,17 @@ func collectorMongoDB(dbType, dbGroup, ip, port, user, pass, tag string) {
 		log.Error(fmt.Sprintln("Send events to proxy error:", err))
 	}
 
+	if memMapped == nil {
+		memMapped = 0
+	}
+	if memMappedWithJournal == nil {
+		memMappedWithJournal = 0
+	}
+
 	insertSQL := fmt.Sprintf("insert into dashboard_mongodb(host,port,tag,connect,ok,uptime,version,connections_current,connections_available,"+
 		"mem_bits,mem_resident,mem_virtual,mem_supported,mem_mapped,mem_mappedWithJournal,network_bytesIn,network_bytesOut,network_numRequests,"+
 		"opcounters_insert,opcounters_query,opcounters_update,opcounters_delete,opcounters_command,opcounters )"+
-		"values('%s','%s','%s','%d','%d','%d','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')", ip, port, tag, connect, ok, uptime, version, connectionsCurrent, connectionsAvailable, memBits, memResident, memVirtual, memSupportedInt, memMapped, memMappedWithJournal,
+		"values('%s','%s','%s','%d','%f','%f','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')", ip, port, tag, connect, ok, uptime, version, connectionsCurrent, connectionsAvailable, memBits, memResident, memVirtual, memSupportedInt, memMapped, memMappedWithJournal,
 		networkBytesIn, networkBytesOut, networkNumRequests, opcountersInsert, opcountersQuery, opcountersUpdate, opcountersDelete, opcountersCommand, opcountersTotal)
 
 	err = mysql.Execute(dbClient, insertSQL)

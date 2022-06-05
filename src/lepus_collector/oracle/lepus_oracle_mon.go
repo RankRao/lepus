@@ -26,6 +26,7 @@ import (
 	"lepus/src/libary/oracle"
 	"lepus/src/libary/tool"
 	"lepus/src/libary/utils"
+	"strings"
 	"time"
 )
 
@@ -49,6 +50,7 @@ func collectorOracle(dbType, dbGroup, host, port, user, pass, sid, tag string) {
 	oraCon, err := oracle.NewConnect(host, port, user, pass, sid)
 	if err != nil {
 		log.Error(fmt.Sprintf("Can't connect to oracle database on %s, %s", eventEntity, err))
+		errInfo := strings.Replace(fmt.Sprint(err), "'", "", -1)
 		events := make([]map[string]interface{}, 0)
 
 		event := map[string]interface{}{
@@ -67,7 +69,7 @@ func collectorOracle(dbType, dbGroup, host, port, user, pass, sid, tag string) {
 			log.Error(fmt.Sprintln("Send events to proxy error:", err))
 		}
 
-		insertSQL := fmt.Sprintf("insert into dashboard_oracle(host,port,sid,tag,connect) values('%s','%s','%s','%s','%d')", host, port, sid, tag, 0)
+		insertSQL := fmt.Sprintf("insert into dashboard_oracle(host,port,sid,tag,connect,error_info) values('%s','%s','%s','%s','%d','%s')", host, port, sid, tag, 0, errInfo)
 		err = mysql.Execute(dbClient, insertSQL)
 		if err != nil {
 			log.Error(fmt.Sprintln("Can't insert data to mysql database, ", err))
@@ -150,7 +152,7 @@ func collectorOracle(dbType, dbGroup, host, port, user, pass, sid, tag string) {
 	physicalWriteIoRequestsPersecond := conv.StrToInt(sysStats["physical write total IO requests"]) - conv.StrToInt(sysStatsPrev["physical write total IO requests"])
 	physicalReadIoRequestsPersecond := conv.StrToInt(sysStats["physical read total IO requests"]) - conv.StrToInt(sysStatsPrev["physical read total IO requests"])
 	osCpuWaitTime := conv.StrToInt(sysStats["OS CPU Qt wait time"]) - conv.StrToInt(sysStatsPrev["OS CPU Qt wait time"])
-	logonsPersecond := conv.StrToInt(sysStats["logons cumulative"]) - conv.StrToInt(sysStatsPrev["logons cumulative"])
+	logonsCumulative := conv.StrToInt(sysStats["logons cumulative"]) - conv.StrToInt(sysStatsPrev["logons cumulative"])
 	logonsCurrent := conv.StrToInt(sysStats["logons current"])
 	userCommitsPersecond := conv.StrToInt(sysStats["user commits"]) - conv.StrToInt(sysStatsPrev["user commits"])
 	userRollbacksPersecond := conv.StrToInt(sysStats["user rollbacks"]) - conv.StrToInt(sysStatsPrev["user rollbacks"])
@@ -273,8 +275,8 @@ func collectorOracle(dbType, dbGroup, host, port, user, pass, sid, tag string) {
 		"event_type":   dbType,
 		"event_group":  dbGroup,
 		"event_entity": eventEntity,
-		"event_key":    "logonsPersecond",
-		"event_value":  logonsPersecond,
+		"event_key":    "logonsCumulative",
+		"event_value":  logonsCumulative,
 		"event_tag":    tag,
 		"event_unit":   "",
 	}
@@ -335,12 +337,12 @@ func collectorOracle(dbType, dbGroup, host, port, user, pass, sid, tag string) {
 
 	insertSQL := fmt.Sprintf("insert into dashboard_oracle(host,port,tag,sid,connect,instance_name,instance_role,instance_status,database_role,open_mode,protection_mode,host_name,database_status,startup_time"+
 		",uptime,version,archiver,session_total,session_active,processes,session_logical_read_persecond,physical_read_persecond,physical_write_persecond,physical_read_io_request_persecond"+
-		",physical_write_io_request_persecond,os_cpu_wait_time,logons_persecond,logons_current,user_commits_persecond,user_rollbacks_persecond"+
+		",physical_write_io_request_persecond,os_cpu_wait_time,logons_cumulative,logons_current,user_commits_persecond,user_rollbacks_persecond"+
 		",user_calls_persecond)"+
 		"values('%s','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%d','%s','%s','%d','%d','%s','%d','%d','%d','%d',"+
 		"'%d','%d','%d','%d','%d','%d','%d')", host, port, tag, sid, connect, instanceName, instanceRole, instanceStatus, databaseRole, openMode, protectedMode, hostname, databaseStatus, startupTime, uptime,
 		version, archiver, len(sessionTotalDetail), len(sessionActiveDetail), processes, sessionLogicalReadsPersecond, physicalReadsPersecond, physicalWritePersecond, physicalReadIoRequestsPersecond,
-		physicalWriteIoRequestsPersecond, osCpuWaitTime, logonsPersecond, logonsCurrent, userCommitsPersecond, userRollbacksPersecond, userCallsPersecond)
+		physicalWriteIoRequestsPersecond, osCpuWaitTime, logonsCumulative, logonsCurrent, userCommitsPersecond, userRollbacksPersecond, userCallsPersecond)
 
 	err = mysql.Execute(dbClient, insertSQL)
 	if err != nil {

@@ -52,6 +52,7 @@ func collectorPostgres(dbType, dbGroup, ip, port, user, pass, tag string) {
 
 	if err != nil {
 		log.Error(fmt.Sprintf("Can't connect to postgres database on %s:%s, %s", ip, port, err))
+		errInfo := strings.Replace(fmt.Sprint(err), "'", "", -1)
 		events := make([]map[string]interface{}, 0)
 		event := map[string]interface{}{
 			"event_time":   tool.GetNowTime(),
@@ -69,7 +70,7 @@ func collectorPostgres(dbType, dbGroup, ip, port, user, pass, tag string) {
 			log.Error(fmt.Sprintln("Send events to proxy error:", err))
 		}
 
-		insertSQL := fmt.Sprintf("insert into dashboard_postgresql(host,port,tag,connect) values('%s','%s','%s','%d')", ip, port, tag, 0)
+		insertSQL := fmt.Sprintf("insert into dashboard_postgresql(host,port,tag,connect,error_info) values('%s','%s','%s','%d','%s')", ip, port, tag, 0, errInfo)
 		err = mysql.Execute(dbClient, insertSQL)
 		if err != nil {
 			log.Error(fmt.Sprintln("Can't insert data to mysql database, ", err))

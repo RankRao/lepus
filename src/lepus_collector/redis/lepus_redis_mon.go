@@ -42,7 +42,7 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, origP
 	rdb, err := redis.Dial("tcp", ip+":"+port)
 	if err != nil {
 		log.Error(fmt.Sprintln("Can't dial redis, ", err))
-
+		errInfo := strings.Replace(fmt.Sprint(err), "'", "", -1)
 		eventEntity := fmt.Sprintf("%s:%s", ip, port)
 		events := make([]map[string]interface{}, 0)
 		event := map[string]interface{}{
@@ -60,7 +60,7 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, origP
 		if err != nil {
 			log.Error(fmt.Sprintln("Send events to proxy error:", err))
 		}
-		insertSQL := fmt.Sprintf("insert into dashboard_redis(host,port,tag,connect) values('%s','%s','%s','%d')", ip, port, tag, 0)
+		insertSQL := fmt.Sprintf("insert into dashboard_redis(host,port,tag,connect,error_info) values('%s','%s','%s','%d','%s')", ip, port, tag, 0, errInfo)
 		err = mysql.Execute(dbClient, insertSQL)
 		if err != nil {
 			log.Error(fmt.Sprintln("Can't insert data to mysql database, ", err))
@@ -365,6 +365,18 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, origP
 		"event_type":   dbType,
 		"event_group":  dbGroup,
 		"event_entity": eventEntity,
+		"event_key":    "keyspaceMisses",
+		"event_value":  utils.StrToFloat(strings.Replace(keyspaceMisses, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
 		"event_key":    "usedCpuSys",
 		"event_value":  utils.StrToFloat(strings.Replace(usedCpuSys, "\r", "", -1)),
 		"event_tag":    tag,
@@ -379,6 +391,30 @@ func collectorRedis(dbType string, dbGroup string, ip string, port string, origP
 		"event_entity": eventEntity,
 		"event_key":    "usedCpuUser",
 		"event_value":  utils.StrToFloat(strings.Replace(usedCpuUser, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "usedCpuSysChildren",
+		"event_value":  utils.StrToFloat(strings.Replace(usedCpuSysChildren, "\r", "", -1)),
+		"event_tag":    tag,
+		"event_unit":   "",
+	}
+	events = append(events, event)
+
+	event = map[string]interface{}{
+		"event_time":   tool.GetNowTime(),
+		"event_type":   dbType,
+		"event_group":  dbGroup,
+		"event_entity": eventEntity,
+		"event_key":    "usedCpuUserChildren",
+		"event_value":  utils.StrToFloat(strings.Replace(usedCpuUserChildren, "\r", "", -1)),
 		"event_tag":    tag,
 		"event_unit":   "",
 	}

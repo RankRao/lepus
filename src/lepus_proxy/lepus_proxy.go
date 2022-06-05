@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"runtime"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -227,8 +228,9 @@ func (api *Adapter) sendSql(w http.ResponseWriter, r *http.Request) {
 		}
 
 		data := buffer.String()
-		log.Debug(fmt.Sprintf("receive sql data: %s", data))
-		err = mysql.Execute(db, data)
+		sqlData := strings.Replace(data, "\"", "", -1)
+		log.Debug(fmt.Sprintf("receive sql data: %s", sqlData))
+		err = mysql.Execute(db, sqlData)
 		if err != nil {
 			log.Error(fmt.Sprintln("Can't insert sql data to mysql database, ", err))
 			return

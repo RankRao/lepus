@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/Shopify/sarama v1.28.0
 	github.com/coocood/freecache v1.2.1
+	github.com/denisenkom/go-mssqldb v0.12.2
 	github.com/garyburd/redigo v1.6.2
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.5.0
@@ -18,6 +19,9 @@ require (
 	github.com/onsi/gomega v1.10.5 // indirect
 	github.com/phachon/go-logger v0.0.0-20191215032019-86e4227f71ea
 	github.com/satori/go.uuid v1.2.0
+	github.com/shirou/gopsutil v3.21.11+incompatible
+	github.com/tklauser/go-sysconf v0.3.10 // indirect
+	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
 	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
