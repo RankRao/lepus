@@ -1,0 +1,36 @@
+工具：使用UltraEdit或者其他文件编辑工具，这里以UE为准
+
+步骤如下：
+
+1、用UE打开lepus-console后默认显示十六进制编码，这个时候按ctrl+H,转换为文本视图
+
+2、按ctrl+f,输入8080查找关键字
+
+3、找到以下2处8080后，按ctrl+H，切换到十六进制的视图进行修改（PS，文本视图直接修改后保存会报错）
+
+文本视图：  html.jpeg.json.wasm.webp1562578125:***@:8080::/96:http:path<nil>
+十六进制视图：006cfe50h: 32 35 3A 2A 2A 2A 40 3A 38 30 38 30 3A 3A 2F    ; 25:***@:8080::/
+修改后，以8880为例（这里使用的是ascii码，0是30，8是38）
+十六进制视图：006cfe50h: 32 35 3A 2A 2A 2A 40 3A 38 38 38 30 3A 3A 2F    ; 25:***@:8880::/
+
+文本视图：  variable PORT is undefined. Using port :8080
+十六进制视图：006f6cf0h: 20 55 73 69 6E 67 20 70 6F 72 74 20 3A 38 30 38 ;  Using port :808
+             006f6d00h: 30 20 62 79 20 64 65 66 61 75 6C 74 66 61 69 6C ; 0 by defaultfail
+修改后
+十六进制视图：006f6cf0h: 20 55 73 69 6E 67 20 70 6F 72 74 20 3A 38 38 38 ;  Using port :888
+             006f6d00h: 30 20 62 79 20 64 65 66 61 75 6C 74 66 61 69 6C ; 0 by defaultfail
+
+4、最后在十六进制视图里，ctrl+s保存修改的结果
+
+5、重新执行./lepus_console,启动日志如下：
+[GIN-debug] GET    /api/v1/event             --> lepus-go/src/controller/event.List (3 handlers)
+[GIN-debug] GET    /api/v1/event/filterItems --> lepus-go/src/controller/event.FilterItems (3 handlers)
+[GIN-debug] GET    /api/v1/event/charts      --> lepus-go/src/controller/event.Charts (3 handlers)
+[GIN-debug] GET    /api/v1/event/chartsFull  --> lepus-go/src/controller/event.ChartsFull (3 handlers)
+[GIN-debug] GET    /api/v1/event/type/list   --> lepus-go/src/controller/event.TypeList (3 handlers)
+[GIN-debug] GET    /api/v1/event/group/list  --> lepus-go/src/controller/event.GroupList (3 handlers)
+[GIN-debug] GET    /api/v1/event/entity/list --> lepus-go/src/controller/event.EntityList (3 handlers)
+[GIN-debug] GET    /api/v1/event/key/list    --> lepus-go/src/controller/event.KeyList (3 handlers)
+[GIN-debug] Listening and serving HTTP on :8880
+
+可以看到端口已经修改为8880
