@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2024 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -17,23 +17,24 @@ or use it for commercial purposes after secondary development, otherwise you may
 package mail
 
 import (
-	"gopkg.in/gomail.v2"
-	"lepus/src/libary/conf"
+	"dbmcloud/setting"
 	"strconv"
+
+	"gopkg.in/gomail.v2"
 )
 
 func Send(mailTo []string, subject, body string) error {
 	mailConn := map[string]string{
-		"user": conf.Option["mail_user"],
-		"pass": conf.Option["mail_pass"],
-		"host": conf.Option["mail_host"],
-		"port": conf.Option["mail_port"],
+		"user": setting.Setting.MailUser,
+		"pass": setting.Setting.MailPass,
+		"host": setting.Setting.MailHost,
+		"port": setting.Setting.MailPort,
 	}
 
 	port, _ := strconv.Atoi(mailConn["port"]) //转换端口类型为int
 
 	m := gomail.NewMessage()
-	m.SetHeader("From", m.FormatAddress(mailConn["user"], conf.Option["mail_from"])) //这种方式可以添加别名，即“XX官方”
+	m.SetHeader("From", m.FormatAddress(mailConn["user"], setting.Setting.MailFrom)) //这种方式可以添加别名，即“XX官方”
 	m.SetHeader("To", mailTo...)                                                     //发送给多个用户
 	m.SetHeader("Subject", subject)                                                  //设置邮件主题
 	m.SetBody("text/html", body)                                                     //设置邮件正文

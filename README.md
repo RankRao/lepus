@@ -1,83 +1,69 @@
-### Lepus介绍
+# dbmcloud
 
-* Lepus数据库监控系统是简洁、直观、强大的开源数据库监控产品，支持MySQL/Oracle/MongoDB/Redis等数据库一站式性能监控，让数据库监控更加简单和专业。远程云中监控、实时邮件告警、丰富的指标和图表、MySQL慢查询分析和AWR性能报告。
+#### 介绍
+通过Golang重构lepus项目
 
-* Lepus致力于打造开源的企业级智能化监控和运维管理平台。
+#### 运行后端服务
 
+安装golang
+# cd /usr/local/
+# wget  https://golang.google.cn/dl/go1.18.10.linux-amd64.tar.gz
+# tar -zxvf go1.18.10.linux-amd64.tar.gz
+# vim ~/.bash_profile
 
-### 安装部署
+配置go环境变量
+PATH=$PATH:$HOME/bin:/usr/local/go/bin/
+# source ~/.bash_profile
+# go version
+go version go1.18.10 linux/amd64
 
-##### 1.编译代码
+配置环境变量
+# mkdir /home/golang
+# go env -w GO111MODULE=on
+# go env -w GOPROXY=https://goproxy.cn,direct
+# go env -w GOPATH=/home/golang
+# go env
 
-$ go build -ldflags -w -a ../src/lepus_proxy/lepus_proxy.go
+安装依赖包
+# git clone https://gitee.com/lepus/dbmcloud.git
+# cd dbmcloud/
+# go mod tidy
+# go mod vendor
 
-$ go build -ldflags -w -a ../src/lepus_alarm/lepus_alarm.go
-
-$ go build -ldflags -w -a ../src/lepus_task/lepus_task.go
-
-$ go build -ldflags -w -a ../src/lepus_collector/mysql/lepus_mysql_mon.go
-
-$ go build -ldflags -w -a ../src/lepus_collector/redis/lepus_redis_mon.go
-
-##### 2.启动Lepus
-
-$ ./lepus_proxy --config=../etc/proxy.ini
-
-$ ./lepus_alarm --config=../etc/alarm.ini
-
-$ ./lepus_task --config=../etc/config.ini
-
-##### 3.其他模块
-
-Lepus5.0版本之后将会以Group的方式运行，此仓库为Lepus核心代码模块, 更多仓库模块请进入 [https://gitee.com/lepus-group](https://gitee.com/lepus-group)
-
-
-##### 4.使用3.X版本
-- 使用Lepus3.X版本，请使用lepus仓库代码 v3.8版本标签下载：[https://gitee.com/lepus-group/lepus/tree/v3.8](https://gitee.com/lepus-group/lepus/tree/v3.8)
-部署文档参考官方网站手册。
-- 使用Lepus5.X及以上版本，需编译部署lepus、lepus-console两个仓库，如果你不需要修改源码，推荐使用我们编译好的二进制包安装（lepus-bin仓库）快速安装部署，部署文档：[点击查看部署文档](https://discuss.lepus.cc/d/5-lepus-50/7)。
+配置文件
+复制setting.example.yml文件为setting.yml,并修改配置信息
 
 
-### 使用案例
-据以往统计和反馈，这些公司曾经或者目前在使用Lepus（历史统计不代表目前继续在使用，如有出入可以联系我们删除）：
-- 飞牛网
-- OPPO
-- 招商银行信用卡
-- 乐视
-- PHPOK
-- 平安好房
-- 同程旅游
-- 时光网
 
-### 软件快照
+运行服务
+go run main.go
 
 
-Lepus3.x版本：
-![Image description](https://discuss.lepus.cc/assets/files/2022-03-20/1647748068-110473-lepus3.jpg)
+#### 运行前端服务
 
-lepus5.X版本：
-![Image description](https://discuss.lepus.cc/assets/files/2022-03-20/1647748134-751835-20220319194313.png)
 
-### 参与贡献
+
+#### 前后端编译打包
+
+1.前端web目录执行npm run build编译前端代码，编译后的文件位于dist目录
+2.将前端编译好的dist目录复制到后端根目录（和main.go同一级），并重命名为static
+3.将static里面的index.html文件复制到后端根目录（和main.go同一级）
+4.进入后端bin目录，执行以下命令打包：
+bin> go build -ldflags -w -a -o dbmcloud.exe  ..\main.go
+
+#### 参与贡献
 
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
 3.  提交代码
 4.  新建 Pull Request
 
-### 如何加入
-参与项目开发请优先提交requests，如果想加入团队一起开发请发送申请邮件至ruyi@139.com （requests将作为能否加入我们的重要参考依据）
 
-### 捐助作者
-LEPUS项目由作者和贡献者业余时间开发和维护，作者负责软件的设计、前后端开发、系统测试、数据库和服务运维。除了耗费大量的业余时间开发和维护，每年还需要支付很多服务器费用部署数据库。如果您觉得Lepus对您的工作有帮助，欢迎捐助我们，捐助费用将用于服务器的续费和软件维护,您的捐助是我们持续的动力，[点击进行捐助](https://www.lepus.cc/crowdfunding/)
+#### 特技
 
-### 联系和支持
-网站：
-[https://www.lepus.cc](https://www.lepus.cc)
-
-社区：
-[https://discuss.lepus.cc](https://discuss.lepus.cc)
-
-公众号：
-公众号定时推送Lepus更新通知和技术分享，以及数据库、大数据干货技术，欢迎关注作者公众号。
-![输入图片说明](https://discuss.lepus.cc/assets/files/2022-02-06/1644160856-809885-qrcode-for-gh-0ae0d3832970-258.jpg)
+1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
+2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
+3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
+4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
+5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
+6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)

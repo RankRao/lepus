@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2024 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -17,7 +17,7 @@ or use it for commercial purposes after secondary development, otherwise you may
 package log
 
 import (
-	"github.com/phachon/go-logger"
+	go_logger "github.com/phachon/go-logger"
 )
 
 var Logger = go_logger.NewLogger()

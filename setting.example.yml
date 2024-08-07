@@ -1,0 +1,42 @@
+log:
+  path: "/tmp/lepus.log"
+  level: "info"
+  debug: false
+
+token:
+  storage: "mysql"
+  key: "S9p2+dsfM1CzLF=="
+  name: "lepus"
+  expired: "3d"
+
+decrypt:
+  signKey: "1234567890abcdef"
+  dbPassKey: "L1e2p3u4s5Abc321"
+
+dataSource:
+  #mysql
+  host: 127.0.0.1
+  port: 3306
+  user: xxxxx
+  password: xxxxxx
+  database: xxxxx
+  #redis
+  redisHost: 127.0.0.1
+  redisPort: 6379
+  redisPassword: xxxxxx
+  #clickhouse
+  clickhouseHost: 127.0.0.1
+  clickhousePort: 9000
+  clickhouseUser: xxxxx
+  clickhousePassword: xxxxxx
+  clickhouseDatabase: xxxxx
+  #nsq
+  nsqServer: 127.0.0.1:4150
+
+notice:
+  #mail
+  mailHost: xxxxx
+  mailPort: xxxxx
+  mailUser: xxxxx
+  mailPass: xxxxx
+  mailFrom: xxxxx

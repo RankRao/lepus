@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2024 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -24,7 +24,7 @@ import (
 )
 
 var (
-	configFile = flag.String("config", "../../etc/config.ini", "General configuration file")
+	configFile = flag.String("config", "./etc/config.ini", "General configuration file")
 	Option     = make(map[string]string)
 )
 
@@ -142,6 +142,54 @@ func init() {
 		if err == nil {
 			for _, v := range section {
 				options, err := cfg.String("influxdb", v)
+				if err == nil {
+					Option[v] = options
+				}
+			}
+		}
+	}
+
+	if cfg.HasSection("clickhouse") {
+		section, err := cfg.SectionOptions("clickhouse")
+		if err == nil {
+			for _, v := range section {
+				options, err := cfg.String("clickhouse", v)
+				if err == nil {
+					Option[v] = options
+				}
+			}
+		}
+	}
+
+	if cfg.HasSection("doris") {
+		section, err := cfg.SectionOptions("doris")
+		if err == nil {
+			for _, v := range section {
+				options, err := cfg.String("doris", v)
+				if err == nil {
+					Option[v] = options
+				}
+			}
+		}
+	}
+
+	if cfg.HasSection("aliyun") {
+		section, err := cfg.SectionOptions("aliyun")
+		if err == nil {
+			for _, v := range section {
+				options, err := cfg.String("aliyun", v)
+				if err == nil {
+					Option[v] = options
+				}
+			}
+		}
+	}
+
+	if cfg.HasSection("wechat") {
+		section, err := cfg.SectionOptions("wechat")
+		if err == nil {
+			for _, v := range section {
+				options, err := cfg.String("wechat", v)
 				if err == nil {
 					Option[v] = options
 				}

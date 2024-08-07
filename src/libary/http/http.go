@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2024 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -31,7 +31,7 @@ import (
 // response：    请求返回的内容
 func Get(url string) (*http.Response, error) {
 	// 超时时间：5秒
-	client := &http.Client{Timeout: 5 * time.Second}
+	client := &http.Client{Timeout: 10 * time.Second}
 	response, err := client.Get(url)
 	if err != nil {
 		return nil, err
@@ -76,15 +76,15 @@ func Post(url string, data interface{}) (string, error) {
 	client := &http.Client{
 		Transport: &http.Transport{
 			Dial: func(netw, addr string) (net.Conn, error) {
-				conn, err := net.DialTimeout(netw, addr, time.Second*5)
+				conn, err := net.DialTimeout(netw, addr, time.Second*8)
 				if err != nil {
 					return nil, err
 				}
-				conn.SetDeadline(time.Now().Add(time.Second * 5))
+				conn.SetDeadline(time.Now().Add(time.Second * 8))
 				return conn, nil
 			},
-			MaxResponseHeaderBytes: 1000000000,
-			ResponseHeaderTimeout:  time.Second * 5,
+			MaxResponseHeaderBytes: 5000000000,
+			ResponseHeaderTimeout:  time.Second * 8,
 		},
 	}
 	jsonStr, _ := json.Marshal(data)

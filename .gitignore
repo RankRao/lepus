@@ -1,9 +1,11 @@
-/etc/config.ini
-/etc/proxy.ini
-/etc/alarm.ini
-/etc/agent.ini
+setting.yml
+/static/*
 /vendor/*
-/bin/*
+**/vendor
+./vendor
 .idea
+main
 nohup.out
-.DS_Store
+__debug_bin.exe
+/tmp/*
+tmp/runner-build.exe

@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2024 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -19,22 +19,11 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
-	"lepus/src/libary/conf"
 )
 
 var err error
-
-func InitConnect() *sql.DB {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?timeout=5s&readTimeout=10s", conf.Option["mysql_user"], conf.Option["mysql_password"], conf.Option["mysql_host"], conf.Option["mysql_port"], conf.Option["mysql_database"]))
-	if err != nil {
-		panic(fmt.Sprintln("Init mysql connect err,", err))
-	}
-	if err := db.Ping(); err != nil {
-		panic(fmt.Sprintln("Init mysql connect err,", err))
-	}
-	return db
-}
 
 func Connect(host, port, username, password, database string) (*sql.DB, error) {
 	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?timeout=3s&readTimeout=5s", username, password, host, port, database))
@@ -47,12 +36,13 @@ func Connect(host, port, username, password, database string) (*sql.DB, error) {
 	return db, nil
 }
 
-func Execute(db *sql.DB, sql string) (err error) {
-	_, err = db.Exec(sql)
+func Execute(db *sql.DB, sql string) (rowsAffected int64, err error) {
+	res, err := db.Exec(sql)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return
+	rowsAffected, _ = res.RowsAffected()
+	return rowsAffected, nil
 }
 
 func QueryOne(db *sql.DB, sql string) (data string, err error) {
@@ -102,4 +92,48 @@ func QueryAll(db *sql.DB, sql string) ([]map[string]interface{}, error) {
 		list = append(list, entry)
 	}
 	return list, nil
+}
+
+/*
+QueryAllNew方法会返回columns，columns顺序是稳定的
+*/
+func QueryAllNew(db *sql.DB, sql string) ([]string, []map[string]interface{}, error) {
+	rows, err := db.Query(sql)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer rows.Close()
+	columns, err := rows.Columns()
+	if err != nil {
+		return nil, nil, err
+	}
+	count := len(columns)
+	values := make([]interface{}, count)
+	scanArgs := make([]interface{}, count)
+	for i := range values {
+		scanArgs[i] = &values[i]
+	}
+
+	var list []map[string]interface{}
+	for rows.Next() {
+		err := rows.Scan(scanArgs...)
+		if err != nil {
+			continue
+		}
+
+		entry := make(map[string]interface{})
+		for i, col := range columns {
+			fmt.Println(col)
+			v := values[i]
+			b, ok := v.([]byte)
+			if ok {
+				entry[col] = string(b)
+				//entry[col] = b
+			} else {
+				entry[col] = v
+			}
+		}
+		list = append(list, entry)
+	}
+	return columns, list, nil
 }

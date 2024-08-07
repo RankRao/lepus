@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2024 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -17,6 +17,9 @@ or use it for commercial purposes after secondary development, otherwise you may
 package utils
 
 import (
+	"bytes"
+	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -80,6 +83,21 @@ func TimeStrToTimestamp(timeStr string, flag int) int64 {
 	return t
 }
 
+func FormatDateTime(timeStr string) (newTimeStr string) {
+	// 给定的时间字符串
+	timeStr = "2024-06-06T14:46:02+08:00"
+	// 解析时间字符串，这里使用了ISO 8601格式
+	t, err := time.Parse(time.RFC3339, timeStr)
+	if err != nil {
+		fmt.Println("Error parsing time:", err)
+		return "------"
+	}
+	// 使用Format方法输出不带时区的格式，例如 "2006-01-02 15:04:05"
+	// 注意这里的格式字符串与RFC3339不同，去掉了时区部分
+	newTimeStr = t.Format("2006-01-02 15:04:05")
+	return newTimeStr
+}
+
 //分割数组，根据传入的数组和分割大小，将数组分割为大小等于指定大小的多个数组，如果不够分，则最后一个数组元素小于其他数组
 //数组：[1, 2, 3, 4, 5, 6, 7, 8, 9]，正整数：2
 //期望结果: [[1, 2], [3, 4], [5, 6], [7, 8], [9]]
@@ -113,6 +131,17 @@ func SplitArray(arr []int, num int64) [][]int {
 	return segments
 }
 
+func MapToStr(data []map[string]interface{}) string {
+	// 序列化为 JSON 字符串
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		panic(err) // 处理错误
+	}
+	// 将 JSON 字符串转换为可打印的字符串
+	str := string(jsonData)
+	return str
+}
+
 func SplitArrayMap(arr []map[string]interface{}, num int64) [][]map[string]interface{} {
 	max := int64(len(arr))
 	//判断数组大小是否小于等于指定分割大小的值，是则把原数组放入二维数组返回
@@ -140,4 +169,30 @@ func SplitArrayMap(arr []map[string]interface{}, num int64) [][]map[string]inter
 		start = i * num
 	}
 	return segments
+}
+
+func GetBytes(key interface{}) ([]byte, error) {
+	var buf bytes.Buffer
+	enc := gob.NewEncoder(&buf)
+	err := enc.Encode(key)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func GetBetweenStr(str, start, end string) string {
+	n := strings.Index(str, start)
+	if n == -1 {
+		n = 0
+	} else {
+		n = n + len(start) // 增加了else，不加的会把start带上
+	}
+	str = string([]byte(str)[n:])
+	m := strings.Index(str, end)
+	if m == -1 {
+		m = len(str)
+	}
+	str = string([]byte(str)[:m])
+	return str
 }

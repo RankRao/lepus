@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2024 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -25,8 +25,8 @@ import (
 
 var err error
 
-func NewConnect(host, port, username, password string) (*sql.DB, error) {
-	db, err := sql.Open("mssql", fmt.Sprintf("server=%s;user id=%s;password=%s;port=%s;encrypt=disable;connection timeout=6;", host, username, password, port))
+func Connect(host, port, username, password, database string) (*sql.DB, error) {
+	db, err := sql.Open("mssql", fmt.Sprintf("server=%s;user id=%s;password=%s;port=%s;database=%s;encrypt=disable;connection timeout=6;", host, username, password, port, database))
 	if err != nil {
 		return nil, err
 	}
@@ -84,4 +84,48 @@ func QueryAll(db *sql.DB, sql string) ([]map[string]interface{}, error) {
 		list = append(list, entry)
 	}
 	return list, nil
+}
+
+/*
+QueryAllNew方法会返回columns，columns顺序是稳定的
+*/
+func QueryAllNew(db *sql.DB, sql string) ([]string, []map[string]interface{}, error) {
+	rows, err := db.Query(sql)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer rows.Close()
+	columns, err := rows.Columns()
+	if err != nil {
+		return nil, nil, err
+	}
+	count := len(columns)
+	values := make([]interface{}, count)
+	scanArgs := make([]interface{}, count)
+	for i := range values {
+		scanArgs[i] = &values[i]
+	}
+
+	var list []map[string]interface{}
+	for rows.Next() {
+		err := rows.Scan(scanArgs...)
+		if err != nil {
+			continue
+		}
+
+		entry := make(map[string]interface{})
+		for i, col := range columns {
+			fmt.Println(col)
+			v := values[i]
+			b, ok := v.([]byte)
+			if ok {
+				entry[col] = string(b)
+				//entry[col] = b
+			} else {
+				entry[col] = v
+			}
+		}
+		list = append(list, entry)
+	}
+	return columns, list, nil
 }

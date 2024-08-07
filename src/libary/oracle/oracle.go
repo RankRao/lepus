@@ -1,5 +1,5 @@
 /*
-Copyright 2014-2022 The Lepus Team Group, website: https://www.lepus.cc
+Copyright 2014-2024 The Lepus Team Group, website: https://www.lepus.cc
 Licensed under the GNU General Public License, Version 3.0 (the "GPLv3 License");
 You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -19,12 +19,14 @@ package oracle
 import (
 	"database/sql"
 	"fmt"
+	"strings"
+
 	_ "github.com/godror/godror"
 )
 
 var err error
 
-func NewConnect(host, port, username, password, sid string) (*sql.DB, error) {
+func Connect(host, port, username, password, sid string) (*sql.DB, error) {
 	db, err := sql.Open("godror", fmt.Sprintf(`user="%s" password="%s" connectString="%s:%s/%s"`, username, password, host, port, sid))
 	if err != nil {
 		return nil, err
@@ -78,6 +80,7 @@ func QueryAll(db *sql.DB, sql string) ([]map[string]interface{}, error) {
 
 		entry := make(map[string]interface{})
 		for i, col := range columns {
+			col = strings.ToLower(col)
 			v := values[i]
 			b, ok := v.([]byte)
 			if ok {
