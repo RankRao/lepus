@@ -80,7 +80,7 @@ const PageHeaderContent: FC<{ currentUser: Partial<CurrentUser> }> = ({ currentU
     <>
       <div className={styles.pageHeaderContent}>
         <div className={styles.avatar}>
-          <Avatar size="large" src="/avatar.jpg" />
+          <Avatar size="large" src="avatar.jpg" />
         </div>
         <div className={styles.content}>
           <div className={styles.contentTitle}>

@@ -84,6 +84,7 @@
   "/public/server/css/index.css": "/public/static/server/css/index.css",
   "/public/logo.svg": "/public/static/logo.svg",
   "/public/logo.png": "/public/static/logo.png",
+  "/public/logo-white.png": "/public/static/logo-white.png",
   "/public/server/img/end.png": "/public/static/server/img/end.png",
   "/public/server/img/consumption.png": "/public/static/server/img/consumption.png",
   "/public/icons/icon-192x192.png": "/public/static/icons/icon-192x192.png",
