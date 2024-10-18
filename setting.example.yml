@@ -17,9 +17,9 @@ dataSource:
   #mysql
   host: 127.0.0.1
   port: 3306
-  user: xxxxx
+  user: xxxxxx
   password: xxxxxx
-  database: xxxxx
+  database: xxxxxx
   #redis
   redisHost: 127.0.0.1
   redisPort: 6379
@@ -27,16 +27,16 @@ dataSource:
   #clickhouse
   clickhouseHost: 127.0.0.1
   clickhousePort: 9000
-  clickhouseUser: xxxxx
+  clickhouseUser: xxxxxx
   clickhousePassword: xxxxxx
-  clickhouseDatabase: xxxxx
+  clickhouseDatabase: xxxxxx
   #nsq
   nsqServer: 127.0.0.1:4150
 
 notice:
   #mail
-  mailHost: xxxxx
-  mailPort: xxxxx
-  mailUser: xxxxx
-  mailPass: xxxxx
-  mailFrom: xxxxx
+  mailHost: xxxxxx
+  mailPort: xxxxxx
+  mailUser: xxxxxx
+  mailPass: xxxxxx
+  mailFrom: xxxxxx

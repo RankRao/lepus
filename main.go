@@ -97,8 +97,18 @@ func main() {
 
 	r.SetHTMLTemplate(template.Must(template.New("").ParseFS(indexHtml, "index.html")))
 	r.StaticFS("/public/", http.FS(staticAsset))
+
+	//解决前后台打包后找不到logo和avarar路径的问题
 	//r.StaticFile("/logo.png", "./static/logo.png")
-	r.StaticFile("/avatar.jpg", "./static/avatar.jpg")
+	//r.StaticFile("/avatar.jpg", "./static/avatar.jpg")
+	r.GET("/logo.png", func(c *gin.Context) {
+		c.Request.URL.Path = "/public/static/logo.png"
+		r.HandleContext(c)
+	})
+	r.GET("/avatar.jpg", func(c *gin.Context) {
+		c.Request.URL.Path = "/public/static/avatar.jpg"
+		r.HandleContext(c)
+	})
 
 	r.GET("/", func(c *gin.Context) {
 		//c.String(200, "Lepus Home Test!")
