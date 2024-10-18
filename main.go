@@ -97,7 +97,7 @@ func main() {
 
 	r.SetHTMLTemplate(template.Must(template.New("").ParseFS(indexHtml, "index.html")))
 	r.StaticFS("/public/", http.FS(staticAsset))
-	r.StaticFile("/logo.png", "./static/logo.png")
+	//r.StaticFile("/logo.png", "./static/logo.png")
 	r.StaticFile("/avatar.jpg", "./static/avatar.jpg")
 
 	r.GET("/", func(c *gin.Context) {
