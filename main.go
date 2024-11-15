@@ -43,7 +43,6 @@ Mandatory arguments to long options are mandatory for short options too.
   -h        dispaly help info.
   -v        display this version and exit
   -c        specify the configuration file path, the default is './setting.yml'
-  -l        display local machine id and license info.
 `
 	fmt.Println(h)
 }
