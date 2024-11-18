@@ -15,7 +15,7 @@ set SERVICE_NAME=LepusService
 
 
 :: 设置服务描述
-set SERVICE_DESCRIPTION=LEPUS数据库监控管理自动化平台
+set SERVICE_DESCRIPTION=数据库SQL查询、SQL执行、性能监控管理等自动化平台系统
 
 :: 设置可执行文件和参数
 set APP_EXE=%APP_PATH%\lepus.exe
@@ -36,9 +36,11 @@ if %errorlevel% neq 0 (
     echo 启动服务失败。错误代码: %errorlevel%
    
 ) else (
-    echo 服务启动成功。
+    echo 服务启动成功
 )
 
+:: 打开lepus系统
+start http://127.0.0.1:8086
 
 :: 暂停以防止窗口关闭
 echo 按任意键关闭此窗口...
